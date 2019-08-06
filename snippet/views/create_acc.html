@@ -1,0 +1,69 @@
+
+<html>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script src="/dynamic/create_user.js"></script>
+    <header>
+        <h1>Create Account</h1>
+    </header>
+    <body>
+        <div class="center">
+            <form method="POST" id="create_acc" class="entry_form">
+                <div class="leftbox">
+                    Username:
+                    <br>
+                    Email:
+                    <br>
+                    Password:
+                    <br>
+                    <a href=".." id="back" class="small_link">Back</a>
+                </div>
+                {{if not . }}
+                <div class="rightbox">
+                    <input type="text" name="username">
+                    <br>
+                    <input type="text" name="email" value="">
+                    <br>
+                    <input type="password" name="password">
+                    <br>
+                    <input type="submit" value="Create" id="createbtn" class="form_btn">
+                </div>
+                {{end}}
+                {{if .}}
+                <div class="rightbox">
+                    <input type="text" name="username" value={{if not .UsernameError}}{{index .Persist "username"}}{{end}}>
+                    <br>
+                    <input type="text" name="email" value={{if not .EmailError}}{{index .Persist "email"}}{{end}}>
+                    <br>
+                    <input type="password" name="password">
+                    <br>
+                    <input type="submit" value="Create" id="createbtn" class="form_btn">
+                </div>
+                {{end}}
+            </form>
+            <br>
+            <div class="error_msg">
+                {{if .UsernameError}}
+                    {{range $i, $m := .UsernameMessage}}
+                        {{$m}}
+                        <br>
+                        <br>
+                    {{end}}
+                {{end}}
+                {{if .EmailError}}
+                    {{range $i, $m := .EmailMessage}}
+                        {{$m}}
+                        <br>
+                        <br>
+                    {{end}}
+                {{end}}
+                {{if .PasswordError}}
+                    {{range $i, $m := .PasswordMessage}}
+                        {{$m}}
+                        <br>
+                        <br>
+                    {{end}}
+                {{end}}
+            </div>
+        </div>
+    </body>
+</html>

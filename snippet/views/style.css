@@ -1,0 +1,46 @@
+body{
+    font: normal 16px Trebuchet MS;
+}
+
+a{
+    text-decoration: none;
+}
+header{
+    text-align: center;
+}
+.error_msg{
+    color: red;
+}
+.center{
+    text-align: center;
+}
+.left{
+    text-align:left;
+    margin-left:10vw;
+    margin-top:10vh;
+}
+.entry_form{
+ display: inline-block;
+}
+
+.leftbox{
+    float: left;
+    text-align: left;
+    margin-right: 3vw;
+}
+
+.rightbox{
+    float: right;
+    text-align: left;
+}
+
+.form_btn{
+    width:98%;
+}
+a:visited{
+  color:blue;
+}
+
+.small_link{
+    font: normal 12px Trebuchet MS;
+}
