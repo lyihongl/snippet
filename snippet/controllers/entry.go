@@ -9,16 +9,18 @@ import (
 	//"github.com/lyihongl/main/snippet/data"
 	"github.com/lyihongl/main/snippet/data"
 	"github.com/lyihongl/main/snippet/res"
+	"golang.org/x/crypto/bcrypt"
 	//"github.com/lyihongl/main/snippet/data"
 	//"golang.org/x/crypto/bcrypt"
 	//"golang.org/x/crypto/bcrypt"
 )
 
 const (
-	userNameTooLong string = "Username over 16 characters"
-	userNameEmpty          = "Username cannot be empty"
-	invalidEmail           = "Invalid email address"
-	passwordEmpty          = "Password cannot be empty"
+	userNameTooLong   string = "Username over 16 characters"
+	userNameEmpty            = "Username cannot be empty"
+	userAlreadyExists        = "Username already exists"
+	invalidEmail             = "Invalid email address"
+	passwordEmpty            = "Password cannot be empty"
 )
 
 //SnippetLogin serves the login page, and handles GET and POST requests
@@ -29,7 +31,20 @@ func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, nil)
 	} else if r.Method == "POST" {
 		r.ParseForm()
-		fmt.Println("Username: ", r.Form["username"])
+		stmt, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
+		//fmt.Println(r.Form.Get("username"))
+		res.CheckErr(err)
+		stmt.Next()
+
+		var uid int
+		var username string
+		var email string
+		var password string
+
+		stmt.Scan(&uid, &username, &email, &password)
+
+		fmt.Println(username, email, password)
+		//fmt.Println("Username: ", r.Form["username"])
 		//encryptedPassword, _ := bcrypt.GenerateFromPassword([]byte(r.Form["password"][0]), bcrypt.DefaultCost)
 
 	}
@@ -58,18 +73,13 @@ func CreateAcc(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" {
 		createErrors := checkCreateError(r)
 		if createErrors.UsernameError || createErrors.EmailError || createErrors.PasswordError {
-			//fmt.Println(createErrors.UsernameError)
-			//fmt.Println(createErrors.Persist)
 			t.Execute(w, createErrors)
 		} else {
-			stmt, err := data.DB.Query("SELECT * FROM users WHERE username=?", "h")
+			stmt, err := data.DB.Prepare("INSERT INTO users (username,email,password) VALUES (?,?,?)")
 			res.CheckErr(err)
-			//a, _ := stmt.Exec("hello")
-			fmt.Println(stmt.Next())
-			//fmt.Println(stmt.Exec("hello"))
-			//stmt, err := data.DB.Prepare("INSERT INTO users (username,email,password) VALUES (?,?,?)")
-			//res.CheckErr(err)
-			//stmt.Exec("hello", "this", "test")
+			hash, err := bcrypt.GenerateFromPassword([]byte(r.Form.Get("password")), bcrypt.DefaultCost)
+			res.CheckErr(err)
+			stmt.Exec(r.Form.Get("username"), r.Form.Get("email"), hash)
 		}
 	}
 }
@@ -83,6 +93,12 @@ func checkCreateError(r *http.Request) CreateErrors {
 
 	createErrors.Persist["username"] = r.Form["username"][0]
 	createErrors.Persist["email"] = r.Form["email"][0]
+	userCheck, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
+	res.CheckErr(err)
+	if userCheck.Next() {
+		createErrors.UsernameError = true
+		createErrors.UsernameMessage = append(createErrors.UsernameMessage, userAlreadyExists)
+	}
 
 	if len(r.Form.Get("username")) > 16 {
 		createErrors.UsernameError = true

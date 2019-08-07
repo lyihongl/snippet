@@ -19,11 +19,11 @@ func Snippet(w http.ResponseWriter, r *http.Request) {
 
 func SnippetAction(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	fmt.Println("vars", vars)
 	if vars["action"] == "create_acc" {
 		CreateAcc(w, r)
 	}
 	if vars["action"] == "login" {
 		SnippetLogin(w, r)
 	}
-	fmt.Println("vars", vars)
 }
