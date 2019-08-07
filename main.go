@@ -7,14 +7,15 @@ import (
 
 	"github.com/gorilla/mux"
 	app "github.com/lyihongl/main/snippet/controllers"
-	db "github.com/lyihongl/main/snippet/data"
+	data "github.com/lyihongl/main/snippet/data"
 	//test "github.com/lyihongl/main/test"
 )
 
 func main() {
 
 	//go globalSessions.GC
-	db.Init()
+	data.Init()
+	data.GetConfig("./snippet/data/env.txt")
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", app.Index)

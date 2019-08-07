@@ -6,6 +6,8 @@ import (
 	"regexp"
 	"text/template"
 
+	//"github.com/lyihongl/main/snippet/data"
+	"github.com/lyihongl/main/snippet/data"
 	"github.com/lyihongl/main/snippet/res"
 	//"github.com/lyihongl/main/snippet/data"
 	//"golang.org/x/crypto/bcrypt"
@@ -16,7 +18,7 @@ const (
 	userNameTooLong string = "Username over 16 characters"
 	userNameEmpty          = "Username cannot be empty"
 	invalidEmail           = "Invalid email address"
-	passwordEmpty 		   = "Password cannot be empty"
+	passwordEmpty          = "Password cannot be empty"
 )
 
 //SnippetLogin serves the login page, and handles GET and POST requests
@@ -60,7 +62,14 @@ func CreateAcc(w http.ResponseWriter, r *http.Request) {
 			//fmt.Println(createErrors.Persist)
 			t.Execute(w, createErrors)
 		} else {
-			stmt, err := data.DB.Prepare("INSERT INTO users")
+			stmt, err := data.DB.Query("SELECT * FROM users WHERE username=?", "h")
+			res.CheckErr(err)
+			//a, _ := stmt.Exec("hello")
+			fmt.Println(stmt.Next())
+			//fmt.Println(stmt.Exec("hello"))
+			//stmt, err := data.DB.Prepare("INSERT INTO users (username,email,password) VALUES (?,?,?)")
+			//res.CheckErr(err)
+			//stmt.Exec("hello", "this", "test")
 		}
 	}
 }
