@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"regexp"
 	"text/template"
@@ -16,11 +15,13 @@ import (
 )
 
 const (
-	userNameTooLong   string = "Username over 16 characters"
-	userNameEmpty            = "Username cannot be empty"
+	userNameTooLong   string = "Username cannot be over 16 characters"
+	userNameEmpty            = "Username field empty"
 	userAlreadyExists        = "Username already exists"
 	invalidEmail             = "Invalid email address"
-	passwordEmpty            = "Password cannot be empty"
+	passwordEmpty            = "Password field empty"
+	//invalidPassword 		 = "Invalid password or username"
+	invalidLogin = "Login credentials invalid"
 )
 
 //SnippetLogin serves the login page, and handles GET and POST requests
@@ -43,7 +44,7 @@ func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 
 		stmt.Scan(&uid, &username, &email, &password)
 
-		fmt.Println(username, email, password)
+		//fmt.Println(username, email, password)
 		//fmt.Println("Username: ", r.Form["username"])
 		//encryptedPassword, _ := bcrypt.GenerateFromPassword([]byte(r.Form["password"][0]), bcrypt.DefaultCost)
 
@@ -62,6 +63,14 @@ type CreateErrors struct {
 	PasswordMessage []string
 
 	Persist map[string]string
+}
+
+type LoginErrors struct {
+	UsernameError bool
+	PasswordError bool
+
+	UsernameMessage []string
+	PasswordMessage []string
 }
 
 //CreateAcc serves the create account page and handles GET and POST requests
@@ -118,4 +127,24 @@ func checkCreateError(r *http.Request) CreateErrors {
 		createErrors.EmailMessage = append(createErrors.EmailMessage, invalidEmail)
 	}
 	return createErrors
+}
+
+func checkLoginError(r *http.Request) LoginErrors{
+	r.ParseForm()
+	var re LoginErrors
+
+	if len(r.Form.Get("username")) == 0 {
+		re.UsernameError = true
+		re.UsernameMessage = append(re.UsernameMessage, userNameEmpty)
+	}
+
+	userCheck, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
+	res.CheckErr(err)
+
+	if !userCheck.Next() {
+		re.UsernameError = true
+		re.UsernameMessage = append(re.UsernameMessage, invalidLogin)
+	}
+
+	return re
 }
