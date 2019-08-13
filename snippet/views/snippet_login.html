@@ -22,8 +22,17 @@
                     <br>
                     <input type="submit" value="Login" id="loginbtn" class="form_btn">
                 </div>
-
             </form>
+            <br>
+            <div class="error_msg">
+                {{if .UsernameError}}
+                    {{range $i, $m := .UsernameMessage}}
+                        {{$m}}
+                        <br>
+                        <br>
+                    {{end}}
+                {{end}}
+            </div>
         </div>
     </body>
 </html>

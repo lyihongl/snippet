@@ -5,44 +5,44 @@ import (
 	"regexp"
 	"text/template"
 
-	//"github.com/lyihongl/main/snippet/data"
 	"github.com/lyihongl/main/snippet/data"
 	"github.com/lyihongl/main/snippet/res"
 	"golang.org/x/crypto/bcrypt"
-	//"github.com/lyihongl/main/snippet/data"
-	//"golang.org/x/crypto/bcrypt"
-	//"golang.org/x/crypto/bcrypt"
 )
 
 const (
-	userNameTooLong   string = "Username cannot be over 16 characters"
-	userNameEmpty            = "Username field empty"
-	userAlreadyExists        = "Username already exists"
-	invalidEmail             = "Invalid email address"
-	passwordEmpty            = "Password field empty"
-	//invalidPassword 		 = "Invalid password or username"
-	invalidLogin = "Login credentials invalid"
+	userNameTooLong   = "Username cannot be over 16 characters"
+	userNameEmpty     = "Username field empty"
+	userAlreadyExists = "Username already exists"
+	invalidEmail      = "Invalid email address"
+	passwordEmpty     = "Password field empty"
+	invalidLogin      = "Login credentials invalid"
 )
 
 //SnippetLogin serves the login page, and handles GET and POST requests
 func SnippetLogin(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles(res.VIEWS + "/snippet_login.html")
 	if r.Method == "GET" {
-		t, err := template.ParseFiles(res.VIEWS + "/snippet_login.html")
 		res.CheckErr(err)
 		t.Execute(w, nil)
 	} else if r.Method == "POST" {
 		r.ParseForm()
-		stmt, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
-		//fmt.Println(r.Form.Get("username"))
-		res.CheckErr(err)
-		stmt.Next()
+		loginErrors := checkLoginError(r)
+		if loginErrors.UsernameError || loginErrors.PasswordError {
+			t.Execute(w, loginErrors)
+		} else {
+			stmt, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
+			res.CheckErr(err)
+			stmt.Next()
 
-		var uid int
-		var username string
-		var email string
-		var password string
+			var uid int
+			var username string
+			var email string
+			var password string
 
-		stmt.Scan(&uid, &username, &email, &password)
+			stmt.Scan(&uid, &username, &email, &password)
+
+		}
 
 		//fmt.Println(username, email, password)
 		//fmt.Println("Username: ", r.Form["username"])
@@ -65,6 +65,7 @@ type CreateErrors struct {
 	Persist map[string]string
 }
 
+//LoginErrors is a struct that holds login error state
 type LoginErrors struct {
 	UsernameError bool
 	PasswordError bool
@@ -129,7 +130,7 @@ func checkCreateError(r *http.Request) CreateErrors {
 	return createErrors
 }
 
-func checkLoginError(r *http.Request) LoginErrors{
+func checkLoginError(r *http.Request) LoginErrors {
 	r.ParseForm()
 	var re LoginErrors
 
@@ -142,6 +143,17 @@ func checkLoginError(r *http.Request) LoginErrors{
 	res.CheckErr(err)
 
 	if !userCheck.Next() {
+		re.UsernameError = true
+		re.UsernameMessage = append(re.UsernameMessage, invalidLogin)
+	}
+
+	var uid int
+	var username string
+	var email string
+	var password string
+
+	userCheck.Scan(&uid, &username, &email, &password)
+	if bcrypt.CompareHashAndPassword([]byte(password), []byte(r.Form.Get("password"))) != nil {
 		re.UsernameError = true
 		re.UsernameMessage = append(re.UsernameMessage, invalidLogin)
 	}

@@ -100,3 +100,4 @@ func (manager *SessionManager) GC() {
 	manager.provider.SessionGC(manager.maxlifetime)
 	time.AfterFunc(time.Duration(manager.maxlifetime), func() {manager.GC()})
 }
+
