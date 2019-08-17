@@ -148,21 +148,16 @@ func checkLoginError(r *http.Request) LoginErrors {
 	userCheck, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
 	res.CheckErr(err)
 
-	if !userCheck.Next() {
-		re.UsernameError = true
-		re.UsernameMessage = append(re.UsernameMessage, invalidLogin)
-	}
-
 	var uid int
 	var username string
 	var email string
 	var password string
 
 	userCheck.Scan(&uid, &username, &email, &password)
-	if bcrypt.CompareHashAndPassword([]byte(password), []byte(r.Form.Get("password"))) != nil {
+
+	if !userCheck.Next() || bcrypt.CompareHashAndPassword([]byte(password), []byte(r.Form.Get("password"))) != nil{
 		re.UsernameError = true
 		re.UsernameMessage = append(re.UsernameMessage, invalidLogin)
 	}
-
 	return re
 }

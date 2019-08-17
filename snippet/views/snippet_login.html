@@ -5,22 +5,36 @@
     </header>
     <body>
         <div class="center">
-            <form method="POSt" id="login" class="entry_form">
-                <div class="leftbox">
-                    Username:
-                    <br>
-                    Password:
-                    <br>
-                    <a href="../create_acc/" id="create_acc" class="small_link">Create Account</a>
-                    <br>
-                    <a href=".." id="back" class="small_link">Back</a>
+            <form method="POST" id="login" class="entry_form">
+                <div class="row">
+                    <div class="leftbox">
+                        Username:
+                    </div>
+                    <div class="rightbox">
+                        <input type="text" name="username">
+                    </div>
                 </div>
-                <div class="rightbox">
-                    <input type="text" name="username">
-                    <br>
-                    <input type="password" name="password">
-                    <br>
-                    <input type="submit" value="Login" id="loginbtn" class="form_btn">
+                <br>
+                <div class="row">
+                    <div class="leftbox">
+                        Password:
+                    </div>
+                    <div class="rightbox">
+                        <input type="password" name="password">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="leftbox">
+                        <a href="../create_acc/" id="create_acc" class="small_link">Create Account</a>
+                    </div>
+                    <div class="rightbox">
+                        <input type="submit" value="Login" id="loginbtn" class="form_btn">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="leftbox">
+                        <a href=".." id="back" class="small_link">Back</a>
+                    </div>
                 </div>
             </form>
             <br>
