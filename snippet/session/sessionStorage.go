@@ -1,11 +1,11 @@
 package session
 
 import (
-	"container/list"
+	//"container/list"
 	"time"
 )
 
-var pder = &Provider{list: list.New()}
+//var pder = &Provider{list: list.New()}
 
 type SessionStore struct {
 	sid          string
@@ -13,7 +13,7 @@ type SessionStore struct {
 	value        map[interface{}]interface{}
 }
 
-func(st *SessionStore) Set(key, value, interface{}) error {
-	st.value[key] = value
-	pder.SessionUpdate(st.sid)
-}
+//func(st *SessionStore) Set(key, value, interface{}) error {
+//	st.value[key] = value
+//	pder.SessionUpdate(st.sid)
+//}

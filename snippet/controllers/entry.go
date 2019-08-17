@@ -17,6 +17,7 @@ const (
 	invalidEmail      = "Invalid email address"
 	passwordEmpty     = "Password field empty"
 	invalidLogin      = "Login credentials invalid"
+	passwordMissmatch = "Passwords do not match"
 )
 
 //SnippetLogin serves the login page, and handles GET and POST requests
@@ -126,6 +127,11 @@ func checkCreateError(r *http.Request) CreateErrors {
 	if m, _ := regexp.MatchString(`^([\w\.\_]+)@(\w+).([a-z]+)$`, r.Form.Get("email")); !m {
 		createErrors.EmailError = true
 		createErrors.EmailMessage = append(createErrors.EmailMessage, invalidEmail)
+	}
+
+	if r.Form.Get("password") != r.Form.Get("confirm_password") {
+		createErrors.PasswordError = true
+		createErrors.PasswordMessage = append(createErrors.PasswordMessage, passwordMissmatch)
 	}
 	return createErrors
 }

@@ -11,7 +11,7 @@ import (
 
 func Snippet(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		t, err := template.ParseFiles(res.VIEWS + "/snippet_home.html")
+		t, err := template.ParseFiles(res.VIEWS + "/snippet_intro.html")
 		res.CheckErr(err)
 		t.Execute(w, nil)
 	}
@@ -22,8 +22,10 @@ func SnippetAction(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("vars", vars)
 	if vars["action"] == "create_acc" {
 		CreateAcc(w, r)
-	}
-	if vars["action"] == "login" {
+	} else if vars["action"] == "login" {
 		SnippetLogin(w, r)
+	} else if vars["action"] == "home" {
+		//verify user token or session
+		SnippetHome(w, r)
 	}
 }

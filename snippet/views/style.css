@@ -20,22 +20,26 @@ header{
     margin-top:10vh;
 }
 .entry_form{
- display: inline-block;
+    display: inline-block;
+}
+.row{
+    margin-top:2%;
 }
 
 .leftbox{
     float: left;
     text-align: left;
-    margin-right: 3vw;
+    padding-right: 0.5vw;
 }
 
 .rightbox{
     float: right;
     text-align: left;
+    width: 52%;
 }
 
 .form_btn{
-    width:98%;
+    width:100%;
 }
 a:visited{
   color:blue;

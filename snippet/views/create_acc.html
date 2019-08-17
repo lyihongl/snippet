@@ -8,35 +8,96 @@
     <body>
         <div class="center">
             <form method="POST" id="create_acc" class="entry_form">
-                <div class="leftbox">
-                    Username:
-                    <br>
-                    Email:
-                    <br>
-                    Password:
-                    <br>
-                    <a href=".." id="back" class="small_link">Back</a>
-                </div>
                 {{if not . }}
-                <div class="rightbox">
-                    <input type="text" name="username">
-                    <br>
-                    <input type="text" name="email" value="">
-                    <br>
-                    <input type="password" name="password">
-                    <br>
-                    <input type="submit" value="Create" id="createbtn" class="form_btn">
+                <div class="row">
+                    <div class="leftbox">
+                        Username:
+                    </div>
+                    <div class="rightbox">
+                        <input type="text" name="username">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="leftbox">
+                        Email:
+                    </div>
+                    <div class="rightbox">
+                        <input type="text" name="email" value="">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="leftbox">
+                        Password:
+                    </div>
+                    <div class="rightbox">
+                        <input type="password" name="password">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="leftbox">
+                        Re-enter password:
+                    </div>
+                    <div class="rightbox">
+                        <input type="password" name="confirm_password">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="rightbox">
+                        <input type="submit" value="Create" id="createbtn" class="form_btn">
+                    </div>
+                    <div class="leftbox">
+                        <a href=".." class="small_link">Back</a>
+                    </div>
                 </div>
                 {{end}}
                 {{if .}}
-                <div class="rightbox">
-                    <input type="text" name="username" value={{if not .UsernameError}}{{index .Persist "username"}}{{end}}>
-                    <br>
-                    <input type="text" name="email" value={{if not .EmailError}}{{index .Persist "email"}}{{end}}>
-                    <br>
-                    <input type="password" name="password">
-                    <br>
-                    <input type="submit" value="Create" id="createbtn" class="form_btn">
+                <div class="row">
+                    <div class="leftbox">
+                        Username:
+                    </div>
+                    <div class="rightbox">
+                        <input type="text" name="username" value={{if not .UsernameError}}{{index .Persist "username"}}{{end}}>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="leftbox">
+                        Email:
+                    </div>
+                    <div class="rightbox">
+                        <input type="text" name="email" value={{if not .EmailError}}{{index .Persist "email"}}{{end}}>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="leftbox">
+                        Password:
+                    </div>
+                    <div class="rightbox">
+                        <input type="password" name="password">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="leftbox">
+                        Re-enter password:
+                    </div>
+                    <div class="rightbox">
+                        <input type="password" name="confirm_password">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="rightbox">
+                        <input type="submit" value="Create" id="createbtn" class="form_btn">
+                    </div>
+                    <div class="leftbox">
+                        <a href=".." class="small_link">Back</a>
+                    </div>
                 </div>
                 {{end}}
             </form>
