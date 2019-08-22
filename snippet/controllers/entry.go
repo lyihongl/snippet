@@ -4,9 +4,12 @@ import (
 	"net/http"
 	"regexp"
 	"text/template"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/lyihongl/main/snippet/data"
 	"github.com/lyihongl/main/snippet/res"
+	"github.com/lyihongl/main/snippet/session"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -21,6 +24,8 @@ const (
 )
 
 //SnippetLogin serves the login page, and handles GET and POST requests
+var jwtKey = []byte("secret_key")
+
 func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(res.VIEWS + "/snippet_login.html")
 	if r.Method == "GET" {
@@ -32,17 +37,24 @@ func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 		if loginErrors.UsernameError || loginErrors.PasswordError {
 			t.Execute(w, loginErrors)
 		} else {
-			stmt, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
-			res.CheckErr(err)
-			stmt.Next()
-
-			var uid int
-			var username string
-			var email string
-			var password string
-
-			stmt.Scan(&uid, &username, &email, &password)
-
+			expirationTime := time.Now().Add(5 * time.Minute)
+			claims := &session.Claims{
+				Username: r.Form.Get("username"),
+				StandardClaims: jwt.StandardClaims{
+					ExpiresAt: expirationTime.Unix(),
+				},
+			}
+			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+			tokenString, err := token.SignedString(jwtKey)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			http.SetCookie(w, &http.Cookie{
+				Name:    "token",
+				Value:   tokenString,
+				Expires: expirationTime,
+			})
 		}
 
 		//fmt.Println(username, email, password)
@@ -140,6 +152,12 @@ func checkLoginError(r *http.Request) LoginErrors {
 	r.ParseForm()
 	var re LoginErrors
 
+	fail := false
+
+	//var creds session.Credentials
+	//err := json.NewDecoder(r.Body).Decode(&creds)
+	//res.CheckErr(err)
+
 	if len(r.Form.Get("username")) == 0 {
 		re.UsernameError = true
 		re.UsernameMessage = append(re.UsernameMessage, userNameEmpty)
@@ -148,6 +166,10 @@ func checkLoginError(r *http.Request) LoginErrors {
 	userCheck, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
 	res.CheckErr(err)
 
+	if !userCheck.Next() {
+		fail = true
+	}
+
 	var uid int
 	var username string
 	var email string
@@ -155,7 +177,14 @@ func checkLoginError(r *http.Request) LoginErrors {
 
 	userCheck.Scan(&uid, &username, &email, &password)
 
-	if !userCheck.Next() || bcrypt.CompareHashAndPassword([]byte(password), []byte(r.Form.Get("password"))) != nil{
+	//fmt.Println([]byte(password))
+	//test := bcrypt.CompareHashAndPassword([]byte(password), []byte("Rubixcube123"))
+	//fmt.Println(test)
+
+	if bcrypt.CompareHashAndPassword([]byte(password), []byte(r.Form.Get("password"))) != nil {
+		fail = true
+	}
+	if fail {
 		re.UsernameError = true
 		re.UsernameMessage = append(re.UsernameMessage, invalidLogin)
 	}
