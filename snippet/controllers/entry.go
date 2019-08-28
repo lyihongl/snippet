@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	//"fmt"
 	"net/http"
 	"regexp"
 	"text/template"
@@ -24,8 +25,6 @@ const (
 )
 
 //SnippetLogin serves the login page, and handles GET and POST requests
-var jwtKey = []byte("secret_key")
-
 func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(res.VIEWS + "/snippet_login.html")
 	if r.Method == "GET" {
@@ -45,7 +44,7 @@ func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 				},
 			}
 			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-			tokenString, err := token.SignedString(jwtKey)
+			tokenString, err := token.SignedString(session.JwtKey)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
@@ -53,8 +52,35 @@ func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 			http.SetCookie(w, &http.Cookie{
 				Name:    "token",
 				Value:   tokenString,
+				Path:    "/",
 				Expires: expirationTime,
 			})
+			user, _ := bcrypt.GenerateFromPassword([]byte(r.Form.Get("username")), bcrypt.DefaultCost)
+
+			//setting a cookie with hashed username, as well as regular username. To ensure the user is valid
+			//use bcrypt to compare the 2
+
+			if _, err := r.Cookie("username"); err != nil {
+				http.SetCookie(w, &http.Cookie{
+					Name:    "username_hash",
+					Value:   string(user),
+					Path:    "/",
+					Expires: expirationTime,
+				})
+				//http.SetCookie(w, &http.Cookie{
+				//	Name:		"username",
+				//	Value:		r.Form.Get("username"),
+				//	Path:		"/",
+				//	Expires:	expirationTime,
+				//})
+			}
+
+			http.Redirect(w, r, "../home/", 302)
+			//http.SetCookie(w, &http.Cookie{
+			//	Name:		"username",
+			//	Value:		r.Form.Get("username"),
+			//	Expires:	expirationTime,
+			//})
 		}
 
 		//fmt.Println(username, email, password)
