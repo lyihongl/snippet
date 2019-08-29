@@ -14,6 +14,7 @@ type homeData struct {
 
 func verifyUserToken() {}
 
+//SnippetHome is the controller for the home of the application
 func SnippetHome(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		t, err := template.ParseFiles(res.VIEWS + "/snippet_home.html")
@@ -21,26 +22,14 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 		res.CheckErr(err)
 		errorPage, err := template.ParseFiles(res.VIEWS + "/error.html")
 
-		if a, b := session.ValidateToken(r); a {
+		if tokenValid, user := session.ValidateToken(r); tokenValid {
+			session.IssueValidationToken(w, r, user)
 			test := homeData{
-				User: b,
+				User: user,
 			}
 			t.Execute(w, test)
 		} else {
 			errorPage.Execute(w, nil)
 		}
-
-		//c, err := r.Cookie("token")
-
-		//confirm that the username has not been changed
-		//if !tkn.Valid {
-		//	http.Redirect(w, r, "../login/", 302)
-		//} else {
-		//	test := homeData{
-		//		User: claims.Username,
-		//	}
-		//	t.Execute(w, test)
-		//}
-
 	}
 }

@@ -2,6 +2,7 @@ package session
 
 import (
 	"net/http"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 
@@ -30,9 +31,13 @@ func ConfirmUsername(w http.ResponseWriter, r *http.Request) bool {
 }
 
 var JwtKey = []byte("secret_key")
+
 //ValidateToken returns true if a valid login token is stored in cookies, false otherwise
 func ValidateToken(r *http.Request) (bool, string) {
 	c, err := r.Cookie("token")
+	if err != nil {
+		return false, ""
+	}
 	tknStr := c.Value
 	if err != nil {
 		return false, ""
@@ -53,4 +58,39 @@ func ValidateToken(r *http.Request) (bool, string) {
 	}
 
 	return true, claims.Username
+}
+
+func IssueValidationToken(w http.ResponseWriter, r *http.Request, username string) {
+	expirationTime := time.Now().Add(7 * 24 * time.Hour)
+	claims := &Claims{
+		Username: r.Form.Get("username"),
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(JwtKey)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Path:    "/",
+		Expires: expirationTime,
+	})
+	user, _ := bcrypt.GenerateFromPassword([]byte(username), bcrypt.DefaultCost)
+
+	//setting a cookie with hashed username, as well as regular username. To ensure the user is valid
+	//use bcrypt to compare the 2
+
+	if _, err := r.Cookie("username"); err != nil {
+		http.SetCookie(w, &http.Cookie{
+			Name:    "username_hash",
+			Value:   string(user),
+			Path:    "/",
+			Expires: expirationTime,
+		})
+	}
 }

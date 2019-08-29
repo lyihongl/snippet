@@ -5,9 +5,7 @@ import (
 	"net/http"
 	"regexp"
 	"text/template"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/lyihongl/main/snippet/data"
 	"github.com/lyihongl/main/snippet/res"
 	"github.com/lyihongl/main/snippet/session"
@@ -28,6 +26,9 @@ const (
 func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(res.VIEWS + "/snippet_login.html")
 	if r.Method == "GET" {
+		if a, _ := session.ValidateToken(r); a {
+			http.Redirect(w, r, "../home/", 302)
+		}
 		res.CheckErr(err)
 		t.Execute(w, nil)
 	} else if r.Method == "POST" {
@@ -36,45 +37,8 @@ func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 		if loginErrors.UsernameError || loginErrors.PasswordError {
 			t.Execute(w, loginErrors)
 		} else {
-			expirationTime := time.Now().Add(5 * time.Minute)
-			claims := &session.Claims{
-				Username: r.Form.Get("username"),
-				StandardClaims: jwt.StandardClaims{
-					ExpiresAt: expirationTime.Unix(),
-				},
-			}
-			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-			tokenString, err := token.SignedString(session.JwtKey)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			http.SetCookie(w, &http.Cookie{
-				Name:    "token",
-				Value:   tokenString,
-				Path:    "/",
-				Expires: expirationTime,
-			})
-			user, _ := bcrypt.GenerateFromPassword([]byte(r.Form.Get("username")), bcrypt.DefaultCost)
 
-			//setting a cookie with hashed username, as well as regular username. To ensure the user is valid
-			//use bcrypt to compare the 2
-
-			if _, err := r.Cookie("username"); err != nil {
-				http.SetCookie(w, &http.Cookie{
-					Name:    "username_hash",
-					Value:   string(user),
-					Path:    "/",
-					Expires: expirationTime,
-				})
-				//http.SetCookie(w, &http.Cookie{
-				//	Name:		"username",
-				//	Value:		r.Form.Get("username"),
-				//	Path:		"/",
-				//	Expires:	expirationTime,
-				//})
-			}
-
+			session.IssueValidationToken(w, r, r.Form.Get("username"))
 			http.Redirect(w, r, "../home/", 302)
 			//http.SetCookie(w, &http.Cookie{
 			//	Name:		"username",
