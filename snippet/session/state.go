@@ -1,6 +1,7 @@
 package session
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -56,14 +57,24 @@ func ValidateToken(r *http.Request) (bool, string) {
 	if !tkn.Valid {
 		return false, ""
 	}
+	fmt.Println("validate token username: ", claims.Username)
 
 	return true, claims.Username
 }
 
 func IssueValidationToken(w http.ResponseWriter, r *http.Request, username string) {
 	expirationTime := time.Now().Add(7 * 24 * time.Hour)
+	fmt.Println("form username", r.Form.Get("username"))
+
+	var _username string
+
+	if len(r.Form.Get("username")) == 0 {
+		_username = username
+	} else {
+		_username = r.Form.Get("username")
+	}
 	claims := &Claims{
-		Username: r.Form.Get("username"),
+		Username: _username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
@@ -80,17 +91,17 @@ func IssueValidationToken(w http.ResponseWriter, r *http.Request, username strin
 		Path:    "/",
 		Expires: expirationTime,
 	})
-	user, _ := bcrypt.GenerateFromPassword([]byte(username), bcrypt.DefaultCost)
+	//user, _ := bcrypt.GenerateFromPassword([]byte(username), bcrypt.DefaultCost)
 
 	//setting a cookie with hashed username, as well as regular username. To ensure the user is valid
 	//use bcrypt to compare the 2
 
-	if _, err := r.Cookie("username"); err != nil {
-		http.SetCookie(w, &http.Cookie{
-			Name:    "username_hash",
-			Value:   string(user),
-			Path:    "/",
-			Expires: expirationTime,
-		})
-	}
+	//if _, err := r.Cookie("username"); err != nil {
+	//http.SetCookie(w, &http.Cookie{
+	//Name:    "username_hash",
+	//Value:   string(user),
+	//Path:    "/",
+	//Expires: expirationTime,
+	//})
+	//}
 }

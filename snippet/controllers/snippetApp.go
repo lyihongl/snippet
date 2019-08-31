@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"text/template"
 
@@ -12,8 +13,6 @@ type homeData struct {
 	User string
 }
 
-func verifyUserToken() {}
-
 //SnippetHome is the controller for the home of the application
 func SnippetHome(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -24,10 +23,11 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 
 		if tokenValid, user := session.ValidateToken(r); tokenValid {
 			session.IssueValidationToken(w, r, user)
-			test := homeData{
+			//fmt.Println(user)
+			info := homeData{
 				User: user,
 			}
-			t.Execute(w, test)
+			t.Execute(w, info)
 		} else {
 			errorPage.Execute(w, nil)
 		}
