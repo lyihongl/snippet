@@ -27,7 +27,7 @@ func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(res.VIEWS + "/snippet_login.html")
 	if r.Method == "GET" {
 		if a, _ := session.ValidateToken(r); a {
-			http.Redirect(w, r, "../home/", 302)
+			http.Redirect(w, r, "../", 302)
 		}
 		res.CheckErr(err)
 		t.Execute(w, nil)
@@ -39,7 +39,7 @@ func SnippetLogin(w http.ResponseWriter, r *http.Request) {
 		} else {
 
 			session.IssueValidationToken(w, r, r.Form.Get("username"))
-			http.Redirect(w, r, "../home/", 302)
+			http.Redirect(w, r, "../", 302)
 			//http.SetCookie(w, &http.Cookie{
 			//	Name:		"username",
 			//	Value:		r.Form.Get("username"),

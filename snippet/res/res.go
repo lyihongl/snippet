@@ -9,3 +9,7 @@ func CheckErr(err error) {
 		panic(err.Error())
 	}
 }
+
+type ErrorMessage struct {
+	ErrorMessage []string 
+}

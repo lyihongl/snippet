@@ -14,6 +14,9 @@ type homeData struct {
 
 //SnippetHome is the controller for the home of the application
 func SnippetHome(w http.ResponseWriter, r *http.Request) {
+	//message := res.ErrorMessage
+	var message res.ErrorMessage
+	message.ErrorMessage = append(message.ErrorMessage, "Login token invalid, make sure cookies are enabled and try logging in again")
 	if r.Method == "GET" {
 		t, err := template.ParseFiles(res.VIEWS + "/snippet_home.html")
 
@@ -28,7 +31,7 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 			}
 			t.Execute(w, info)
 		} else {
-			errorPage.Execute(w, nil)
+			errorPage.Execute(w, message)
 		}
 	}
 }

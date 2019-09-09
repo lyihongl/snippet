@@ -5,22 +5,23 @@
         <div class="center">
             Signed in as {{.User}}
             <div class="row">
-                <!--
+                
                 <script type="text/javascript">
                     window.onload = function() {
                         var a = document.getElementById("logout");
 
                         a.onclick = function() {
                             eraseCookieFromAllPaths("token");
+                            window.location.href = '../';
                             return false;
                         }
                     }
                 </script>
-                -->
+            
                 <a id="logout" href="../">Logout</a>
             </div>
             <div class="row">
-                <a href="../create/" class="button">Create New</a>
+                <a href=".." class="button">Create New</a>
             </div>
         </div>
     </body>
