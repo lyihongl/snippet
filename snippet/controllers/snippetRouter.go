@@ -23,7 +23,7 @@ func SnippetAction(w http.ResponseWriter, r *http.Request) {
 	if vars["action"] == "create_acc" {
 		CreateAcc(w, r)
 	} else if vars["action"] == "login" {
-		SnippetLogin(w, r)
+		GeneralLogin(w, r)
 	} else if vars["action"] == "home" {
 		//verify user token or session
 		SnippetHome(w, r)

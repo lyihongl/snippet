@@ -22,7 +22,7 @@ func main() {
 
 	//snippet := r.PathPrefix("/snippet").Subrouter()
 	//snippet.HandleFunc("/{action}/", app.SnippetLogin)
-	r.HandleFunc("/login/", app.SnippetLogin)
+	r.HandleFunc("/login/", app.GeneralLogin)
 	r.HandleFunc("/create_acc/", app.CreateAcc)
 
 	r.HandleFunc("/snippet/", app.Snippet)

@@ -23,8 +23,8 @@ const (
 )
 
 //SnippetLogin serves the login page, and handles GET and POST requests
-func SnippetLogin(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles(res.VIEWS + "/snippet_login.html")
+func GeneralLogin(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles(res.VIEWS + "/general_login.html")
 	if r.Method == "GET" {
 		if a, _ := session.ValidateToken(r); a {
 			http.Redirect(w, r, "../", 302)
