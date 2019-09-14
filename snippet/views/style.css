@@ -2,6 +2,20 @@ body{
     font: normal 16px Trebuchet MS;
 }
 
+textarea{
+    resize: none;
+}
+
+.menubar {
+    padding-left: 1%;
+}
+
+#custom_box_0 {
+    text-align: justify;
+    max-width: 600px;
+    margin:auto;
+}
+
 a{
     text-decoration: none;
 }
@@ -19,11 +33,26 @@ header{
     margin-left:10vw;
     margin-top:10vh;
 }
+
+.align-right{
+    float:right;
+}
+
+.align-center{
+    margin:auto;
+    width: 50%;
+}
+
+.green-border{
+    border: 3px solid green;
+    padding: 10px;
+}
+
 .entry_form{
     display: inline-block;
 }
 .row{
-    margin-top:2%;
+    margin-top:0.5vh;
 }
 
 .leftbox{
@@ -61,4 +90,35 @@ a.button{
     border-right: 1px solid #333333;
     border-bottom: 1px solid #333333;
     border-left: 1px solid #CCCCCC;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  top: -5px;
+  left: 105%;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.dank:active {
+    position: relative;
+    top: 2px;
 }
