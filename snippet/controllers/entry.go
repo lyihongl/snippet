@@ -93,6 +93,7 @@ func CreateAcc(w http.ResponseWriter, r *http.Request) {
 			hash, err := bcrypt.GenerateFromPassword([]byte(r.Form.Get("password")), bcrypt.DefaultCost)
 			res.CheckErr(err)
 			stmt.Exec(r.Form.Get("username"), r.Form.Get("email"), hash)
+			http.Redirect(w, r, "..", http.StatusFound)
 		}
 	}
 }

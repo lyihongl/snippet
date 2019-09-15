@@ -95,10 +95,13 @@
                     <div class="rightbox">
                         <input type="submit" value="Create" id="createbtn" class="form_btn">
                         <script type="text/javascript">
+                            //alert({{.}});
                             document.getElementById("create_acc")
                             .addEventListener("submit", function(e){
                                 e.preventDefault()
-                                window.location.href = "..";
+                                if(!({{.Error}})){
+                                    window.location.href = "..";
+                                }
                             });
                         </script>
                     </div>
