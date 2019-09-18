@@ -94,16 +94,6 @@
                 <div class="row">
                     <div class="rightbox">
                         <input type="submit" value="Create" id="createbtn" class="form_btn">
-                        <script type="text/javascript">
-                            //alert({{.}});
-                            document.getElementById("create_acc")
-                            .addEventListener("submit", function(e){
-                                e.preventDefault()
-                                if(!({{.Error}})){
-                                    window.location.href = "..";
-                                }
-                            });
-                        </script>
                     </div>
                     <div class="leftbox">
                         <a href=".." class="small_link">Back</a>
