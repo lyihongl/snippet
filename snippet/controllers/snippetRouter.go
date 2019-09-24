@@ -25,7 +25,6 @@ func SnippetAction(w http.ResponseWriter, r *http.Request) {
 	} else if vars["action"] == "login" {
 		GeneralLogin(w, r)
 	} else if vars["action"] == "home" {
-		//verify user token or session
 		SnippetHome(w, r)
 	}
 }

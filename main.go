@@ -4,36 +4,52 @@ import (
 	//"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	app "github.com/lyihongl/main/snippet/controllers"
-	data "github.com/lyihongl/main/snippet/data"
+	"github.com/lyihongl/main/snippet/data"
+
+	//data "github.com/lyihongl/main/snippet/data"
+	"github.com/mholt/certmagic"
 	//test "github.com/lyihongl/main/test"
 )
 
 func main() {
+	prod := os.Args
 	//go globalSessions.GC
-	data.Init()
-	data.GetConfig("./snippet/data/env.txt")
+	certmagic.Default.Agreed = true
+
+	certmagic.Default.Email = "yihongliu00@gmail.com"
+	if prod[0] != "prod" {
+		data.Init()
+		//data.GetConfig("./snippet/data/env.txt")
+	}
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", app.Index)
 
 	//snippet := r.PathPrefix("/snippet").Subrouter()
 	//snippet.HandleFunc("/{action}/", app.SnippetLogin)
-	r.HandleFunc("/login/", app.GeneralLogin)
-	r.HandleFunc("/create_acc/", app.CreateAcc)
-
-	r.HandleFunc("/snippet/", app.Snippet)
-	r.HandleFunc("/snippet/{action}/", app.SnippetAction)
+	r.HandleFunc("/login", app.GeneralLogin)
+	r.HandleFunc("/create_acc", app.CreateAcc)
+	r.HandleFunc("/services", app.ServiceRouter)
+	r.HandleFunc("/services/{action}", app.ServiceRouter)
+	//r.HandleFunc("/snippet/", app.Snippet)
+	//r.HandleFunc("/snippet/{action}/", app.SnippetAction)
 	//r.HandleFunc("/create_acc/", app.CreateAcc)
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/views/static"))))
-	r.PathPrefix("/dynamic/").Handler(http.StripPrefix("/dynamic/", http.FileServer(http.Dir("snippet/javascript"))))
+	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/views/static"))))
+	r.PathPrefix("/dynamic").Handler(http.StripPrefix("/dynamic/", http.FileServer(http.Dir("snippet/javascript"))))
 
-	err := http.ListenAndServe(":9090", r) //set listen port
-	if err != nil {
-		log.Fatal("ListenAndServer:", err)
+	if prod[0] == "prod" {
+		certmagic.HTTPS([]string{"yihong.ca"}, r)
+	} else {
+		err := http.ListenAndServe(":9090", r) //set listen port
+		if err != nil {
+			log.Fatal("ListenAndServer:", err)
+		}
 	}
+
 }
 
 //func callInterface()

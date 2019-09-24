@@ -13,7 +13,7 @@ var DB *sql.DB
 
 //Init connection to db
 func Init() {
-	dbVars := GetConfig("./snippet/data/env.txt")
+	dbVars := GetConfig("./snippet/data/.env")
 	user := (*dbVars)["db_user"]
 	pass := (*dbVars)["db_password"]
 	host := (*dbVars)["db_host"]
