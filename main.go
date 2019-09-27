@@ -1,27 +1,29 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
 	app "github.com/lyihongl/main/snippet/controllers"
-	"github.com/lyihongl/main/snippet/data"
+	//"github.com/lyihongl/main/snippet/data"
 
-	//data "github.com/lyihongl/main/snippet/data"
+	data "github.com/lyihongl/main/snippet/data"
 	"github.com/mholt/certmagic"
 	//test "github.com/lyihongl/main/test"
 )
 
 func main() {
 	prod := os.Args
+	fmt.Println(prod[1])
+	fmt.Println(prod[1] == "prod")
 	//go globalSessions.GC
 	certmagic.Default.Agreed = true
 
 	certmagic.Default.Email = "yihongliu00@gmail.com"
-	if prod[0] != "prod" {
+	if prod[1] != "prod" {
 		data.Init()
 		//data.GetConfig("./snippet/data/env.txt")
 	}
