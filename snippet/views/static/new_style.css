@@ -1,0 +1,15 @@
+a{
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+body{
+    padding-top: 55px;
+}
+
+.static{
+    position: fixed;
+}
