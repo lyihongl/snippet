@@ -22,12 +22,16 @@ const (
 	passwordMissmatch = "Passwords do not match"
 )
 
+type Test struct{
+	Test bool
+}
+
 //SnippetLogin serves the login page, and handles GET and POST requests
 func GeneralLogin(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(res.VIEWS + "/general_login.html")
 	if r.Method == "GET" {
 		if a, _ := session.ValidateToken(r); a {
-			http.Redirect(w, r, "../", 302)
+			http.Redirect(w, r, "../", 200)
 		}
 		res.CheckErr(err)
 		t.Execute(w, nil)
@@ -39,7 +43,7 @@ func GeneralLogin(w http.ResponseWriter, r *http.Request) {
 		} else {
 
 			session.IssueValidationToken(w, r, r.Form.Get("username"))
-			http.Redirect(w, r, "../", 302)
+			http.Redirect(w, r, "../", 200)
 			//http.SetCookie(w, &http.Cookie{
 			//	Name:		"username",
 			//	Value:		r.Form.Get("username"),

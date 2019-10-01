@@ -11,3 +11,9 @@ function eraseCookieFromAllPaths(name) {
         document.cookie = name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT;' + pathCurrent + ';';
     }
 }
+
+function logged_in_alert(_in) {
+    //if(_in) {
+        alert("Already logged in");
+    //}
+}
