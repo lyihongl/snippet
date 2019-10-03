@@ -19,14 +19,10 @@ func main() {
 	prod := os.Args
 	fmt.Println(prod[1])
 	fmt.Println(prod[1] == "prod")
-	//go globalSessions.GC
 	certmagic.Default.Agreed = true
 
 	certmagic.Default.Email = "yihongliu00@gmail.com"
-	if prod[1] != "prod" {
-		data.Init()
-		//data.GetConfig("./snippet/data/env.txt")
-	}
+	data.Init()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", app.Index)
@@ -43,7 +39,7 @@ func main() {
 	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/views/static"))))
 	r.PathPrefix("/dynamic").Handler(http.StripPrefix("/dynamic/", http.FileServer(http.Dir("snippet/javascript"))))
 
-	if prod[0] == "prod" {
+	if prod[1] == "prod" {
 		certmagic.HTTPS([]string{"yihong.ca"}, r)
 	} else {
 		err := http.ListenAndServe(":9090", r) //set listen port

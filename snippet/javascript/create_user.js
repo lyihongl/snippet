@@ -13,7 +13,6 @@ function eraseCookieFromAllPaths(name) {
 }
 
 function logged_in_alert(_in) {
-    //if(_in) {
+    
         alert("Already logged in");
-    //}
 }
