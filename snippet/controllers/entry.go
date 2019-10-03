@@ -28,7 +28,7 @@ type Test struct{
 
 //SnippetLogin serves the login page, and handles GET and POST requests
 func GeneralLogin(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles(res.VIEWS + "/general_login.html")
+	t, err := template.ParseFiles(res.VIEWS + "/general_login.gohtml")
 	if r.Method == "GET" {
 		if a, _ := session.ValidateToken(r); a {
 			http.Redirect(w, r, "../", 200)
@@ -83,7 +83,7 @@ type LoginErrors struct {
 
 //CreateAcc serves the create account page and handles GET and POST requests
 func CreateAcc(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles(res.VIEWS + "/create_acc.html")
+	t, err := template.ParseFiles(res.VIEWS + "/create_acc.gohtml")
 	res.CheckErr(err)
 	if r.Method == "GET" {
 		t.Execute(w, nil)

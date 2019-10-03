@@ -14,7 +14,7 @@ import (
 func Index(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(r.Method)
 	if r.Method == "GET" {
-		t, err := template.ParseFiles(res.VIEWS + "/index.html")
+		t, err := template.ParseFiles(res.VIEWS + "/index.gohtml")
 		loggedIn := false
 		if a, _ := session.ValidateToken(r); a {
 			loggedIn = true

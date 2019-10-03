@@ -11,7 +11,7 @@ import (
 
 func Snippet(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		t, err := template.ParseFiles(res.VIEWS + "/snippet_intro.html")
+		t, err := template.ParseFiles(res.VIEWS + "/snippet_intro.gohtml")
 		res.CheckErr(err)
 		t.Execute(w, nil)
 	}

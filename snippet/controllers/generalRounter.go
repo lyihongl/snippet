@@ -21,7 +21,7 @@ func ServiceRouter(w http.ResponseWriter, r *http.Request) {
 
 func ServicePage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		t, err := template.ParseFiles(res.VIEWS + "/services_intro.html")
+		t, err := template.ParseFiles(res.VIEWS + "/services_intro.gohtml")
 		res.CheckErr(err)
 		t.Execute(w, nil)
 	}
