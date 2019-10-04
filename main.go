@@ -37,7 +37,7 @@ func main() {
 	//r.HandleFunc("/snippet/", app.Snippet)
 	//r.HandleFunc("/snippet/{action}/", app.SnippetAction)
 	//r.HandleFunc("/create_acc/", app.CreateAcc)
-	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/views/static"))))
+	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/static"))))
 	r.PathPrefix("/dynamic").Handler(http.StripPrefix("/dynamic/", http.FileServer(http.Dir("snippet/javascript"))))
 
 	if prod[1] == "prod" {
