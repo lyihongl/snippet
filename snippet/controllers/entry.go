@@ -22,6 +22,29 @@ const (
 	passwordMissmatch = "Passwords do not match"
 )
 
+//CreateErrors defines a structure to hold error states and messages during
+//the creation of a user
+type CreateErrors struct {
+	UsernameError bool
+	EmailError    bool
+	PasswordError bool
+
+	UsernameMessage []string
+	EmailMessage    []string
+	PasswordMessage []string
+
+	Persist map[string]string
+}
+
+//LoginErrors is a struct that holds login error state
+type LoginErrors struct {
+	UsernameError bool
+	PasswordError bool
+
+	UsernameMessage []string
+	PasswordMessage []string
+}
+
 //SnippetLogin serves the login page, and handles GET and POST requests
 func GeneralLogin(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(res.VIEWS + "/general_login.gohtml")
@@ -54,28 +77,6 @@ func GeneralLogin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//CreateErrors defines a structure to hold error states and messages during
-//the creation of a user
-type CreateErrors struct {
-	UsernameError bool
-	EmailError    bool
-	PasswordError bool
-
-	UsernameMessage []string
-	EmailMessage    []string
-	PasswordMessage []string
-
-	Persist map[string]string
-}
-
-//LoginErrors is a struct that holds login error state
-type LoginErrors struct {
-	UsernameError bool
-	PasswordError bool
-
-	UsernameMessage []string
-	PasswordMessage []string
-}
 
 //CreateAcc serves the create account page and handles GET and POST requests
 func CreateAcc(w http.ResponseWriter, r *http.Request) {
