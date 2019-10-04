@@ -22,10 +22,6 @@ const (
 	passwordMissmatch = "Passwords do not match"
 )
 
-type Test struct{
-	Test bool
-}
-
 //SnippetLogin serves the login page, and handles GET and POST requests
 func GeneralLogin(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(res.VIEWS + "/general_login.gohtml")
