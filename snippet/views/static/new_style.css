@@ -50,3 +50,8 @@ body{
 .center {
     text-align: center;
 }
+
+.shadow-hover:hover {
+    border-radius: 3%;
+    box-shadow: 0 0 20px rgba(33,33,33,.5); 
+}
