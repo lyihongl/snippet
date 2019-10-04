@@ -28,3 +28,11 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, generalData)
 	}
 }
+
+func ComingSoon (w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		t, err := template.ParseFiles(res.VIEWS + "/coming_soon.gohtml")
+		res.CheckErr(err)
+		t.Execute(w, nil)
+	}
+}

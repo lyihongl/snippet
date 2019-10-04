@@ -29,6 +29,7 @@ func main() {
 
 	//snippet := r.PathPrefix("/snippet").Subrouter()
 	//snippet.HandleFunc("/{action}/", app.SnippetLogin)
+	r.HandleFunc("/coming_soon", app.ComingSoon)
 	r.HandleFunc("/login", app.GeneralLogin)
 	r.HandleFunc("/create_acc", app.CreateAcc)
 	r.HandleFunc("/services", app.ServiceRouter)
