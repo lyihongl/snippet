@@ -55,3 +55,11 @@ body{
     border-radius: 2%;
     box-shadow: 0 0 20px rgba(33,33,33,.5); 
 }
+
+#services-link{
+    color: rgb(189, 243, 210);
+}
+
+#services-link:hover{
+    color: rgb(57, 238, 127);
+}

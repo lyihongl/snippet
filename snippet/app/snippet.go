@@ -33,18 +33,23 @@ func Snippet(w http.ResponseWriter, r *http.Request) {
 func SnippetHome(w http.ResponseWriter, r *http.Request) {
 	var message res.ErrorMessage
 	message.ErrorMessage = append(message.ErrorMessage, "<script>alert(You are not logged in);</script>")
+
 	if r.Method == "GET" {
 		t, err := template.ParseFiles(res.VIEWS + "/snippet_home.gohtml")
 
 		res.CheckErr(err)
 		errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
 
+		var data TemplateData
+		data.Init()
+
+		data.BoolVals["logged_in"] = false
 		if tokenValid, user := session.ValidateToken(r); tokenValid {
 			session.IssueValidationToken(w, r, user)
-			info := homeData{
-				User: user,
-			}
-			t.Execute(w, info)
+			data.BoolVals["logged_in"] = true
+			data.StringVals["logged_in_name"] = "Logged in as "+user
+			data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+			t.Execute(w, data)
 		} else {
 			errorPage.Execute(w, message)
 		}

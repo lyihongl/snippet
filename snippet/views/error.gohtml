@@ -2,19 +2,6 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     <body>
         <div class="center">
-            <script>
-                alert("You are not logged in");
-            </script>
-            <h1>
-                An error has occured
-            </h1>
-            <div class="error_msg">
-                {{range $i, $m := .ErrorMessage}}
-                    {{$m}}
-                    <br>
-                    <br>
-                {{end}}
-            </div>
             <a href="javascript:history.back()">Back</a>
         </div>
     </body>
