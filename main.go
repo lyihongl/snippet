@@ -7,7 +7,8 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	app "github.com/lyihongl/main/snippet/controllers"
+	routers "github.com/lyihongl/main/snippet/routers"
+	app "github.com/lyihongl/main/snippet/app"
 	//"github.com/lyihongl/main/snippet/data"
 
 	data "github.com/lyihongl/main/snippet/data"
@@ -27,16 +28,17 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", app.Index)
 
-	//snippet := r.PathPrefix("/snippet").Subrouter()
-	//snippet.HandleFunc("/{action}/", app.SnippetLogin)
+	//General routes
 	r.HandleFunc("/coming_soon", app.ComingSoon)
 	r.HandleFunc("/login", app.GeneralLogin)
 	r.HandleFunc("/create_acc", app.CreateAcc)
-	r.HandleFunc("/services", app.ServiceRouter)
-	r.HandleFunc("/services/{action}", app.ServiceRouter)
-	//r.HandleFunc("/snippet/", app.Snippet)
-	//r.HandleFunc("/snippet/{action}/", app.SnippetAction)
-	//r.HandleFunc("/create_acc/", app.CreateAcc)
+
+	//service routes
+	r.HandleFunc("/services", routers.ServiceRouter)
+	r.HandleFunc("/services/{service}", routers.ServiceRouter)
+	r.HandleFunc("/services/{service}/{action}", routers.ServiceRouter)
+
+
 	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/static"))))
 	r.PathPrefix("/dynamic").Handler(http.StripPrefix("/dynamic/", http.FileServer(http.Dir("snippet/javascript"))))
 
@@ -50,5 +52,3 @@ func main() {
 	}
 
 }
-
-//func callInterface()
