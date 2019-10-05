@@ -23,7 +23,7 @@ type TemplateData struct{
 	StringVals map[string]string
 }
 
-func InitTemplateData(t *TemplateData) {
+func (t *TemplateData) Init() {
 	t.BoolVals = make(map[string]bool)
 	t.FloatVals = make(map[string]float64)
 	t.StringVals = make(map[string]string)
@@ -35,6 +35,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	//var generalData GeneralData
 	//generalData.LoggedIn = false
 	var data TemplateData
+	data.Init()
 	data.BoolVals["logged_in"] = false
 	if r.Method == "GET" {
 		//fmt.Println(generalData.NavBar)
