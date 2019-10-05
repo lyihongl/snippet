@@ -17,8 +17,9 @@ func Snippet(w http.ResponseWriter, r *http.Request) {
 		var data TemplateData
 		data.Init()
 
-		if a, _ := session.ValidateToken(r); a {
+		if a, user := session.ValidateToken(r); a {
 			data.BoolVals["logged_in"] = true
+			data.StringVals["logged_in_name"] = "Logged in as "+user
 		}
 		data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
 
@@ -30,9 +31,7 @@ func Snippet(w http.ResponseWriter, r *http.Request) {
 
 //SnippetHome is the controller for the home of the application
 func SnippetHome(w http.ResponseWriter, r *http.Request) {
-	//message := res.ErrorMessage
 	var message res.ErrorMessage
-	//message.ErrorMessage = append(message.ErrorMessage, "Login token invalid, make sure cookies are enabled and try logging in again")
 	message.ErrorMessage = append(message.ErrorMessage, "<script>alert(You are not logged in);</script>")
 	if r.Method == "GET" {
 		t, err := template.ParseFiles(res.VIEWS + "/snippet_home.gohtml")
@@ -42,7 +41,6 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 
 		if tokenValid, user := session.ValidateToken(r); tokenValid {
 			session.IssueValidationToken(w, r, user)
-			//fmt.Println(user)
 			info := homeData{
 				User: user,
 			}
