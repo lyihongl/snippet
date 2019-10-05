@@ -4,7 +4,7 @@ package controllers
 
 import (
 	"bytes"
-	"fmt"
+	//"fmt"
 	"net/http"
 	"text/template"
 
@@ -17,26 +17,43 @@ type GeneralData struct {
 	NavBar   string
 }
 
+type TemplateData struct{
+	BoolVals map[string]bool
+	FloatVals map[string]float64
+	StringVals map[string]string
+}
+
+func InitTemplateData(t *TemplateData) {
+	t.BoolVals = make(map[string]bool)
+	t.FloatVals = make(map[string]float64)
+	t.StringVals = make(map[string]string)
+}
+
 //Index is the main landing page of the webside, and only handles GET requests
 func Index(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(r.Method)
-	var generalData GeneralData
-	generalData.LoggedIn = false
+	//var generalData GeneralData
+	//generalData.LoggedIn = false
+	var data TemplateData
+	data.BoolVals["logged_in"] = false
 	if r.Method == "GET" {
 		//fmt.Println(generalData.NavBar)
 		t, err := template.ParseFiles(res.VIEWS + "/index.gohtml")
-		if a, _ := session.ValidateToken(r); a {
-			generalData.LoggedIn = true
-		}
-		data, _ := template.ParseFiles(res.VIEWS + "/nav_bar.html")
-		var tpl bytes.Buffer
-		data.Execute(&tpl, generalData)
-		result := tpl.String()
-		fmt.Println(result)
-		generalData.NavBar = result
 		res.CheckErr(err)
-		t.Execute(w, generalData)
+		if a, _ := session.ValidateToken(r); a {
+			data.BoolVals["logged_in"] = true
+		}
+		data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+		t.Execute(w, data)
 	}
+}
+
+func LoadTemplateAsComponenet(path string, data *TemplateData) string{
+	t, err := template.ParseFiles(path)
+	res.CheckErr(err)
+	var tpl bytes.Buffer
+	t.Execute(&tpl, data)
+	return tpl.String()
 }
 
 func ComingSoon(w http.ResponseWriter, r *http.Request) {

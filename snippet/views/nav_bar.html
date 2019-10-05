@@ -11,7 +11,7 @@
                         <script type="text/javascript">
                         var loginBtn = document.getElementById('login-btn')
                         loginBtn.onclick = function() {
-                            if({{.LoggedIn}}) {
+                            if({{index .BoolVals "logged_in"}}) {
                                 alert("You are already logged in");
                             } else {
                                 window.location.href = "/login";
