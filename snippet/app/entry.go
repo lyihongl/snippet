@@ -13,13 +13,14 @@ import (
 )
 
 const (
-	userNameTooLong   = "Username cannot be over 16 characters"
-	userNameEmpty     = "Username field empty"
-	userAlreadyExists = "Username already exists"
-	invalidEmail      = "Invalid email address"
-	passwordEmpty     = "Password field empty"
-	invalidLogin      = "Login credentials invalid"
-	passwordMissmatch = "Passwords do not match"
+	userNameTooLong   	= "Username cannot be over 16 characters"
+	userNameEmpty     	= "Username field empty"
+	userAlreadyExists 	= "Username already exists"
+	invalidEmail      	= "Invalid email address"
+	emailAlreadyExists 	= "Account with this email already exists"
+	passwordEmpty     	= "Password field empty"
+	invalidLogin      	= "Login credentials invalid"
+	passwordMissmatch 	= "Passwords do not match"
 )
 
 //CreateErrors defines a structure to hold error states and messages during
@@ -100,6 +101,13 @@ func CreateAcc(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type userInterface struct{
+	uid int
+	username string
+	email string
+	password string
+}
+
 func checkCreateError(r *http.Request) CreateErrors {
 	r.ParseForm()
 	var createErrors CreateErrors
@@ -115,6 +123,15 @@ func checkCreateError(r *http.Request) CreateErrors {
 		createErrors.UsernameError = true
 		createErrors.UsernameMessage = append(createErrors.UsernameMessage, userAlreadyExists)
 	}
+
+	emailCheck, err := data.DB.Query("select * from users where email=?", r.Form.Get("email"))
+	res.CheckErr(err)
+	if emailCheck.Next() {
+		createErrors.EmailError = true
+		createErrors.EmailMessage = append(createErrors.EmailMessage, emailAlreadyExists)
+	}
+	//print(a.username)
+	//print(userCheck)
 
 	if len(r.Form.Get("username")) > 16 {
 		createErrors.UsernameError = true
