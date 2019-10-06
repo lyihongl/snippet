@@ -63,3 +63,7 @@ body{
 #services-link:hover{
     color: rgb(57, 238, 127);
 }
+
+.A4{
+    size: 21cm 29.7cm;
+}
