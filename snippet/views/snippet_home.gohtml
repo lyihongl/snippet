@@ -13,9 +13,64 @@
         <div class="container">
             {{index .StringVals "nav_bar"}}
         </div>
-        <div class="container">
-            <iframe id="resume_frame" src="">
-            </iframe>
+        <div class="container center">
+            <div class="row margin-top auto-margin center">
+                <div class="col">
+                    <a class="btn btn-primary fix-btn-width" href="create" role="button">Add New Snippet</a>
+                </div>
+            </div>
+            <div class="row margin-top">
+                <div class="col">
+                    <a class="btn btn-primary fix-btn-width" href="export" role="button">Export Resume</a>
+                </div>
+            </div>
+            <div class="row margin-top">
+                <div class="col">
+                    <h4>
+                        Current snippets:
+                    </h4>
+                    <div class="row">
+                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th style="width: 75%;" scope="col" class="center">Name</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbod>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td class="center">test</td>
+                                        <td class="align-right">
+                                            <a href="edit">view</a>
+                                            <a href="edit">edit</a>
+                                            <a href="edit">delete</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td class="center">test</td>
+                                        <td class="align-right">
+                                            <a href="edit">edit</a>
+                                            <a href="edit">delete</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td class="center">test</td>
+                                        <td class="align-right">
+                                            <a href="edit">edit</a>
+                                            <a href="edit">delete</a>
+                                        </td>
+                                    </tr>
+                                </tbod>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

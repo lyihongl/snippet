@@ -57,13 +57,34 @@ body{
 }
 
 #services-link{
-    color: rgb(189, 243, 210);
+    color: rgb(39, 92, 170);
 }
 
 #services-link:hover{
-    color: rgb(57, 238, 127);
+    color: rgb(0, 174, 255);
 }
 
 .A4{
     size: 21cm 29.7cm;
+}
+
+#resume_frame{
+    width: 8.5in;
+    height: 11in;
+}
+
+.fix-btn-width{
+    width: 40vw;
+}
+
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 50vh;
+    overflow: auto;
+    width: 80vw;
+}
+
+.align-right {
+    text-align: right;
 }
