@@ -55,7 +55,7 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 			data.StringVals["logged_in_name"] = "Logged in as " + user
 			data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
 
-			data.StringVals["table"] = loadTableFromDB()
+			data.StringVals["table"] = loadTableFromDB(user)
 
 			t.Execute(w, data)
 
@@ -67,9 +67,14 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func loadTableFromDB() string {
+func loadTableFromDB(username string) string {
 	//var table string
-	snippet, err := data.DB.Query("SELECT * FROM snippet")
+	userid, err := data.DB.Query("select id from users where username=?", username)
+	userid.Next()
+	var uid int
+	userid.Scan(&uid)
+	res.CheckErr(err)
+	snippet, err := data.DB.Query("SELECT id, snippet_name FROM snippet where userid=?", uid)
 	res.CheckErr(err)
 
 	var buffer bytes.Buffer
@@ -81,12 +86,11 @@ func loadTableFromDB() string {
 	for snippet.Next() {
 		index++
 		var uid int
-		var snippet_id int
+		//var snippet_id int
 		var name string
-		var data string
+		//var data string
 
-
-		snippet.Scan(&uid, &snippet_id, &name, &data)
+		snippet.Scan(&uid, &name)
 		t_data.IntVals["snippet_id"] = uid
 		t_data.IntVals["snippet_num"] = index
 		t_data.StringVals["snippet_name"] = name
