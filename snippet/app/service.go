@@ -8,6 +8,13 @@ import (
 	"github.com/lyihongl/main/snippet/session"
 )
 
+type App interface{
+	Home()
+	Create()
+	Delete()
+	Get()
+}
+
 func ServicePage(w http.ResponseWriter, r *http.Request) {
 	var data TemplateData
 	data.Init()

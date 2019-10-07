@@ -37,6 +37,7 @@ func main() {
 	r.HandleFunc("/services", routers.ServiceRouter)
 	r.HandleFunc("/services/{service}", routers.ServiceRouter)
 	r.HandleFunc("/services/{service}/{action}", routers.ServiceRouter)
+	r.HandleFunc("/services/{service}/{action}/{id}", routers.ServiceRouter)
 
 
 	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/static"))))

@@ -21,12 +21,14 @@ type TemplateData struct{
 	BoolVals map[string]bool
 	FloatVals map[string]float64
 	StringVals map[string]string
+	IntVals map[string]int
 }
 
 func (t *TemplateData) Init() {
 	t.BoolVals = make(map[string]bool)
 	t.FloatVals = make(map[string]float64)
 	t.StringVals = make(map[string]string)
+	t.IntVals = make(map[string]int)
 }
 
 //Index is the main landing page of the webside, and only handles GET requests

@@ -88,3 +88,7 @@ body{
 .align-right {
     text-align: right;
 }
+
+.margin-right-table-links{
+    margin-right:3%;
+}
