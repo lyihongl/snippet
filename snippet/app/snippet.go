@@ -2,6 +2,7 @@ package app
 
 import (
 	"bytes"
+	"fmt"
 	//"fmt"
 	"net/http"
 	"text/template"
@@ -42,7 +43,6 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 
 		res.CheckErr(err)
 		errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
-
 
 		data.BoolVals["logged_in"] = false
 
@@ -114,7 +114,6 @@ func SnippetCreate(w http.ResponseWriter, r *http.Request) {
 		res.CheckErr(err)
 		errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
 
-
 		data.BoolVals["logged_in"] = false
 
 		if tokenValid, user := session.ValidateToken(r); tokenValid {
@@ -134,6 +133,30 @@ func SnippetCreate(w http.ResponseWriter, r *http.Request) {
 
 		}
 	} else if r.Method == "POST" {
+		t, err := template.ParseFiles(res.VIEWS + "/snippet_create.gohtml")
 
+		res.CheckErr(err)
+		errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
+
+		data.BoolVals["logged_in"] = false
+
+		if tokenValid, user := session.ValidateToken(r); tokenValid {
+			r.ParseForm()
+			session.IssueValidationToken(w, r, user)
+			data.BoolVals["logged_in"] = true
+			data.StringVals["logged_in_name"] = "Logged in as " + user
+			data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+
+			data.StringVals["table"] = loadTableFromDB(user)
+
+			fmt.Println(r.Form["snippet_area"])
+
+			t.Execute(w, data)
+
+		} else {
+			data.StringVals["error_msg"] = res.LOGIN_ALERT
+			errorPage.Execute(w, data)
+
+		}
 	}
 }

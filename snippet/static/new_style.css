@@ -77,6 +77,13 @@ body{
     height: 11in;
 }
 
+#preview_frame{
+    width: 7in;
+    height: 5.9in;
+    position: absolute;;
+    overflow: auto;
+}
+
 .fix-btn-width{
     width: 40vw;
 }

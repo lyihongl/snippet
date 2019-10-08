@@ -4,7 +4,7 @@
     <body>
         {{index .StringVals "nav_bar"}}
         <div class="container">
-            <form id="new_snippet_form">
+            <form id="new_snippet_form" method="POST">
                 <div class="row">
                     <div class="col center">
                         <div class="row margin-top text-center">
@@ -17,7 +17,7 @@
                             Snippet:
                         </div>
                         <div class="row margin-top-sm">
-                                <textarea class="noresize"rows="20" cols="63" form="new_snippet_form"></textarea>
+                                <textarea class="noresize"rows="20" cols="63" form="new_snippet_form" name="snippet_area"></textarea>
                         </div>
                     </div>
                     <div class="col">
@@ -25,7 +25,7 @@
                             Preview:
                         </div>
                         <div class="row margin-top-sm">
-                            <iframe src=></iframe>
+                            <iframe id="preview_frame" src=></iframe>
                         </div>
                     </div>
                 </div>
