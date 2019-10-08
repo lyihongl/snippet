@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/lyihongl/main/snippet/data"
+	_data "github.com/lyihongl/main/snippet/data"
 	"github.com/lyihongl/main/snippet/res"
 	"github.com/lyihongl/main/snippet/session"
 )
@@ -68,12 +68,12 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 
 func loadTableFromDB(username string) string {
 	//var table string
-	userid, err := data.DB.Query("select id from users where username=?", username)
+	userid, err := _data.DB.Query("select id from users where username=?", username)
 	userid.Next()
 	var uid int
 	userid.Scan(&uid)
 	res.CheckErr(err)
-	snippet, err := data.DB.Query("SELECT id, snippet_name FROM snippet where userid=?", uid)
+	snippet, err := _data.DB.Query("SELECT id, snippet_name FROM snippet where userid=?", uid)
 	res.CheckErr(err)
 
 	var buffer bytes.Buffer
@@ -150,9 +150,16 @@ func SnippetCreate(w http.ResponseWriter, r *http.Request) {
 			data.StringVals["table"] = loadTableFromDB(user)
 
 			fmt.Println(r.Form["snippet_area"])
+			//checkForSnippet, _ := _data.DB.Query("select * from snippet where name=?", r.Form["snippet_name"])
+			useridQuery, _ := _data.DB.Query("select id from users where name=?", user)
+			useridQuery.Next()
+			var userid int
+			useridQuery.Scan(&userid)
+			stmt, _ := _data.DB.Prepare("insert into snippet (snippet_id, userid, snippet_name, data) values (?, ?, ?, ?, ?)")
+			stmt.Exec(1, userid, r.Form.Get("snippet_name"), r.Form.Get("snippet_data"))
+
 
 			t.Execute(w, data)
-
 		} else {
 			data.StringVals["error_msg"] = res.LOGIN_ALERT
 			errorPage.Execute(w, data)
