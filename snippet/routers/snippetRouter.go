@@ -16,5 +16,7 @@ func SnippetRouter(w http.ResponseWriter, r *http.Request) {
 		app.Snippet(w, r)
 	} else if vars["action"] == "home" {
 		app.SnippetHome(w, r)
+	} else if vars["action"] == "create" {
+		app.SnippetCreate(w, r)
 	}
 }

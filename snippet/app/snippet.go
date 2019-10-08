@@ -34,8 +34,8 @@ func Snippet(w http.ResponseWriter, r *http.Request) {
 
 //SnippetHome is the controller for the home of the application
 func SnippetHome(w http.ResponseWriter, r *http.Request) {
-	var message res.ErrorMessage
-	message.ErrorMessage = append(message.ErrorMessage, "<script>alert(You are not logged in);</script>")
+	var data TemplateData
+	data.Init()
 
 	if r.Method == "GET" {
 		t, err := template.ParseFiles(res.VIEWS + "/snippet_home.gohtml")
@@ -43,8 +43,6 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 		res.CheckErr(err)
 		errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
 
-		var data TemplateData
-		data.Init()
 
 		data.BoolVals["logged_in"] = false
 
@@ -61,7 +59,8 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 
 		} else {
 
-			errorPage.Execute(w, message)
+			data.StringVals["error_msg"] = res.LOGIN_ALERT
+			errorPage.Execute(w, data)
 
 		}
 	}
@@ -107,8 +106,33 @@ func loadTableFromDB(username string) string {
 }
 
 func SnippetCreate(w http.ResponseWriter, r *http.Request) {
+	var data TemplateData
+	data.Init()
 	if r.Method == "GET" {
+		t, err := template.ParseFiles(res.VIEWS + "/snippet_create.gohtml")
 
+		res.CheckErr(err)
+		errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
+
+
+		data.BoolVals["logged_in"] = false
+
+		if tokenValid, user := session.ValidateToken(r); tokenValid {
+
+			session.IssueValidationToken(w, r, user)
+			data.BoolVals["logged_in"] = true
+			data.StringVals["logged_in_name"] = "Logged in as " + user
+			data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+
+			data.StringVals["table"] = loadTableFromDB(user)
+
+			t.Execute(w, data)
+
+		} else {
+			data.StringVals["error_msg"] = res.LOGIN_ALERT
+			errorPage.Execute(w, data)
+
+		}
 	} else if r.Method == "POST" {
 
 	}

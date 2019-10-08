@@ -43,6 +43,10 @@ body{
     margin-top: 5vh;
 }
 
+.margin-top-sm {
+    margin-top: 2vh;
+}
+
 .constrain-width {
     max-width: 500px;
 }
@@ -91,4 +95,12 @@ body{
 
 .margin-right-table-links{
     margin-right:3%;
+}
+
+.width-80-p {
+    width:80%;
+}
+
+textarea {
+    resize: none !important;
 }
