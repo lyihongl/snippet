@@ -222,11 +222,14 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 			t.Execute(w, data)
 		}
 	} else if r.Method == "POST" {
+		vars := mux.Vars(r)
 		r.ParseForm()
 		if tokenValid, user := session.ValidateToken(r); tokenValid {
 			t, data := LoadStdPage(r, "/snippet_edit.gohtml", user)
 			data.StringVals["snippet_name"] = r.Form.Get("snippet_name")
 			data.StringVals["snippet_data"] = r.Form.Get("snippet_data")
+			stmt, _ := _data.DB.Prepare("update snippet set snippet_name=?, data=? where id=?")
+			stmt.Exec(data.StringVals["snippet_name"], data.StringVals["snippet_data"], vars["id"])
 			t.Execute(w, data)
 		}
 	}
