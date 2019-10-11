@@ -222,6 +222,26 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 			t.Execute(w, data)
 		}
 	} else if r.Method == "POST" {
-
+		r.ParseForm()
+		if tokenValid, user := session.ValidateToken(r); tokenValid {
+			t, data := LoadStdPage(r, "/snippet_edit.gohtml", user)
+			data.StringVals["snippet_name"] = r.Form.Get("snippet_name")
+			data.StringVals["snippet_data"] = r.Form.Get("snippet_data")
+			t.Execute(w, data)
+		}
 	}
+}
+
+func LoadStdPage(r *http.Request, templatePath string, user string) (*template.Template, *TemplateData) {
+	var data TemplateData
+	data.Init()
+	t, err := template.ParseFiles(res.VIEWS + templatePath)
+	res.CheckErr(err)
+
+	fmt.Println("edit func")
+	data.BoolVals["logged_in"] = true
+	data.StringVals["logged_in_name"] = "Logged in as " + user
+	data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+
+	return t, &data
 }
