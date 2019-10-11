@@ -3,6 +3,10 @@ package app
 import (
 	"bytes"
 	"fmt"
+	"regexp"
+
+	//"regexp"
+
 	//"fmt"
 
 	//"log"
@@ -218,6 +222,7 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 			data.StringVals["snippet_name"] = snippetName
 			data.StringVals["snippet_data"] = snippetData
 			//fmt.Println("snippet name: " + data.StringVals["snippet_name"])
+			//data.StringVals["iframe_contents"] = "$(document).ready(function(){$('#preview_frame').contents().find('body').html('<div> blah </div>');});"
 
 			t.Execute(w, data)
 		}
@@ -228,8 +233,14 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 			t, data := LoadStdPage(r, "/snippet_edit.gohtml", user)
 			data.StringVals["snippet_name"] = r.Form.Get("snippet_name")
 			data.StringVals["snippet_data"] = r.Form.Get("snippet_data")
+			//regexp.MustCompile(`\n*`).ReplaceAllString(r.Form.Get("snippet_data"), "")
+			re := regexp.MustCompile(`\r?\n`)
+			//data.StringVals["snippet_data"] = re.ReplaceAllString(r.Form.Get("snippet_data"), "")
+			//fmt.Println("b" + b)
 			stmt, _ := _data.DB.Prepare("update snippet set snippet_name=?, data=? where id=?")
 			stmt.Exec(data.StringVals["snippet_name"], data.StringVals["snippet_data"], vars["id"])
+			data.StringVals["snippet_preview"] = re.ReplaceAllString(data.StringVals["snippet_data"], "")
+			data.StringVals["iframe_contents"] = LoadTemplateAsComponenet(res.VIEWS+"/preview.html", data)
 			t.Execute(w, data)
 		}
 	}
