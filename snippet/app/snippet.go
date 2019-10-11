@@ -3,10 +3,13 @@ package app
 import (
 	"bytes"
 	"fmt"
+	//"log"
+
 	//"fmt"
 	"net/http"
 	"text/template"
 
+	//"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	_data "github.com/lyihongl/main/snippet/data"
 	"github.com/lyihongl/main/snippet/res"
 	"github.com/lyihongl/main/snippet/session"
@@ -54,6 +57,7 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 			data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
 
 			data.StringVals["table"] = loadTableFromDB(user)
+
 
 			t.Execute(w, data)
 
@@ -149,15 +153,19 @@ func SnippetCreate(w http.ResponseWriter, r *http.Request) {
 
 			data.StringVals["table"] = loadTableFromDB(user)
 
-			fmt.Println(r.Form["snippet_area"])
+			//fmt.Println(r.Form["snippet_data"])
 			//checkForSnippet, _ := _data.DB.Query("select * from snippet where name=?", r.Form["snippet_name"])
-			useridQuery, _ := _data.DB.Query("select id from users where name=?", user)
-			useridQuery.Next()
+			fmt.Println("db: ")
+			fmt.Println(_data.DB)
+			fmt.Println(user)
+			useridQuery, _ := _data.DB.Query("select id from users where username=?", user)
+			fmt.Println(useridQuery.Next())
+			//useridQuery.Next()
 			var userid int
 			useridQuery.Scan(&userid)
-			stmt, _ := _data.DB.Prepare("insert into snippet (snippet_id, userid, snippet_name, data) values (?, ?, ?, ?, ?)")
-			stmt.Exec(1, userid, r.Form.Get("snippet_name"), r.Form.Get("snippet_data"))
-
+			fmt.Println(userid)
+			stmt, _ := _data.DB.Prepare("insert into snippet (userid, snippet_name) values (?, ?)")
+			stmt.Exec(userid, r.Form.Get("snippet_name"))
 
 			t.Execute(w, data)
 		} else {
