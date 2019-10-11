@@ -2,6 +2,7 @@ package app
 
 import (
 	"bytes"
+	"fmt"
 	//"fmt"
 
 	//"log"
@@ -76,7 +77,7 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 
 		if tokenValid, _ := session.ValidateToken(r); tokenValid {
 			//userid := _data.GetUserId(user)
-			stmt, _ := _data.DB.Prepare("delete from snippet where id=?")	
+			stmt, _ := _data.DB.Prepare("delete from snippet where id=?")
 			stmt.Exec(id)
 		} else {
 			data.StringVals["error_msg"] = res.LOGIN_ALERT
@@ -84,8 +85,6 @@ func SnippetHome(w http.ResponseWriter, r *http.Request) {
 
 		}
 
-
-		
 	}
 }
 
@@ -193,9 +192,35 @@ func SnippetCreate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func SnippetEdit(w http.ResponseWriter, r *http.Request, id int) {
+func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
+	var data TemplateData
+	data.Init()
 	if r.Method == "GET" {
+		if tokenValid, user := session.ValidateToken(r); tokenValid {
 
+			t, err := template.ParseFiles(res.VIEWS + "/snippet_edit.gohtml")
+			res.CheckErr(err)
+
+			fmt.Println("edit func")
+			data.BoolVals["logged_in"] = true
+			data.StringVals["logged_in_name"] = "Logged in as " + user
+			data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+
+			data.StringVals["table"] = loadTableFromDB(user)
+
+			nameQuery, _ := _data.DB.Query("select snippet_name, data from snippet where id=?", id)
+			nameQuery.Next()
+
+			var snippetName string
+			var snippetData string
+			nameQuery.Scan(&snippetName, &snippetData)
+
+			data.StringVals["snippet_name"] = snippetName
+			data.StringVals["snippet_data"] = snippetData
+			//fmt.Println("snippet name: " + data.StringVals["snippet_name"])
+
+			t.Execute(w, data)
+		}
 	} else if r.Method == "POST" {
 
 	}
