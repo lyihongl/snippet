@@ -32,3 +32,11 @@ func Init() {
 		panic(err.Error())
 	}
 }
+
+func GetUserId(user string) int {
+	useridQuery, _ := DB.Query("select id from users where username=?", user)
+	useridQuery.Next()
+	var result int
+	useridQuery.Scan(&result)
+	return result
+}
