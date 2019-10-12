@@ -234,13 +234,22 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 			data.StringVals["snippet_name"] = r.Form.Get("snippet_name")
 			data.StringVals["snippet_data"] = r.Form.Get("snippet_data")
 			//regexp.MustCompile(`\n*`).ReplaceAllString(r.Form.Get("snippet_data"), "")
-			re := regexp.MustCompile(`\r?\n`)
-			//data.StringVals["snippet_data"] = re.ReplaceAllString(r.Form.Get("snippet_data"), "")
 			//fmt.Println("b" + b)
 			stmt, _ := _data.DB.Prepare("update snippet set snippet_name=?, data=? where id=?")
 			stmt.Exec(data.StringVals["snippet_name"], data.StringVals["snippet_data"], vars["id"])
-			data.StringVals["snippet_preview"] = re.ReplaceAllString(data.StringVals["snippet_data"], "")
-			data.StringVals["iframe_contents"] = LoadTemplateAsComponenet(res.VIEWS+"/preview.html", data)
+
+			re := regexp.MustCompile(`\r?\n`)
+
+
+			//data.StringVals["snippet_data"] = re.ReplaceAllString(r.Form.Get("snippet_data"), "")
+
+			snippetPreview := LoadTemplateAsComponenet(res.VIEWS+"/preview.html", data)
+			fmt.Println(snippetPreview)
+			data.StringVals["snippet_preview"] = re.ReplaceAllString(snippetPreview, "")
+			previewScript := LoadTemplateAsComponenet(res.VIEWS + "/preview_script.html", data)
+			data.StringVals["preview_script"] = re.ReplaceAllString(previewScript, "")
+
+
 			t.Execute(w, data)
 		}
 	}
