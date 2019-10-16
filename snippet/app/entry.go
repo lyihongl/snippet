@@ -12,6 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+//Error messages
 const (
 	userNameTooLong   	= "Username cannot be over 16 characters"
 	userNameEmpty     	= "Username field empty"
@@ -46,7 +47,7 @@ type LoginErrors struct {
 	PasswordMessage []string
 }
 
-//SnippetLogin serves the login page, and handles GET and POST requests
+//GeneralLogin serves the login page, and handles GET and POST requests
 func GeneralLogin(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(res.VIEWS + "/general_login.gohtml")
 	if r.Method == "GET" {
@@ -62,20 +63,9 @@ func GeneralLogin(w http.ResponseWriter, r *http.Request) {
 		if loginErrors.UsernameError || loginErrors.PasswordError {
 			t.Execute(w, loginErrors)
 		} else {
-
 			session.IssueValidationToken(w, r, r.Form.Get("username"))
 			http.Redirect(w, r, "/", 302)
-			//http.SetCookie(w, &http.Cookie{
-			//	Name:		"username",
-			//	Value:		r.Form.Get("username"),
-			//	Expires:	expirationTime,
-			//})
 		}
-
-		//fmt.Println(username, email, password)
-		//fmt.Println("Username: ", r.Form["username"])
-		//encryptedPassword, _ := bcrypt.GenerateFromPassword([]byte(r.Form["password"][0]), bcrypt.DefaultCost)
-
 	}
 }
 
@@ -126,12 +116,11 @@ func checkCreateError(r *http.Request) CreateErrors {
 
 	emailCheck, err := data.DB.Query("select * from users where email=?", r.Form.Get("email"))
 	res.CheckErr(err)
+
 	if emailCheck.Next() {
 		createErrors.EmailError = true
 		createErrors.EmailMessage = append(createErrors.EmailMessage, emailAlreadyExists)
 	}
-	//print(a.username)
-	//print(userCheck)
 
 	if len(r.Form.Get("username")) > 16 {
 		createErrors.UsernameError = true
@@ -164,32 +153,24 @@ func checkLoginError(r *http.Request) LoginErrors {
 
 	fail := false
 
-	//var creds session.Credentials
-	//err := json.NewDecoder(r.Body).Decode(&creds)
-	//res.CheckErr(err)
-
 	if len(r.Form.Get("username")) == 0 {
 		re.UsernameError = true
 		re.UsernameMessage = append(re.UsernameMessage, userNameEmpty)
 	}
 
-	userCheck, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
+	userCheck, err := data.DB.Query("SELECT password FROM users WHERE username=?", r.Form.Get("username"))
 	res.CheckErr(err)
 
 	if !userCheck.Next() {
 		fail = true
 	}
 
-	var uid int
-	var username string
-	var email string
+	//var uid int
+	//var username string
+	//var email string
 	var password string
 
-	userCheck.Scan(&uid, &username, &email, &password)
-
-	//fmt.Println([]byte(password))
-	//test := bcrypt.CompareHashAndPassword([]byte(password), []byte("Rubixcube123"))
-	//fmt.Println(test)
+	userCheck.Scan(&password)
 
 	if bcrypt.CompareHashAndPassword([]byte(password), []byte(r.Form.Get("password"))) != nil {
 		fail = true

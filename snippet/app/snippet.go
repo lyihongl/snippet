@@ -4,14 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"regexp"
-
-	//"regexp"
-
-	//"fmt"
-
-	//"log"
-
-	//"fmt"
 	"net/http"
 	"text/template"
 
@@ -26,6 +18,7 @@ type homeData struct {
 	User string
 }
 
+//Snippet serves the page that introduces what snippet is
 func Snippet(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		var data TemplateData
@@ -35,7 +28,7 @@ func Snippet(w http.ResponseWriter, r *http.Request) {
 			data.BoolVals["logged_in"] = true
 			data.StringVals["logged_in_name"] = "Logged in as " + user
 		}
-		data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+		data.StringVals["nav_bar"] = LoadTemplateAsComponent(res.VIEWS+"/nav_bar.html", &data)
 
 		t, err := template.ParseFiles(res.VIEWS + "/snippet_intro.gohtml")
 		res.CheckErr(err)
@@ -45,50 +38,39 @@ func Snippet(w http.ResponseWriter, r *http.Request) {
 
 //SnippetHome is the controller for the home of the application
 func SnippetHome(w http.ResponseWriter, r *http.Request) {
+
 	var data TemplateData
 	data.Init()
 
-	errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
-	res.CheckErr(err)
+	data.BoolVals["logged_in"] = false
+	data.StringVals["nav_bar"] = LoadTemplateAsComponent(res.VIEWS+"/nav_bar.html", &data)
 
-	if r.Method == "GET" {
+	if tokenValid, user := session.ValidateToken(r); tokenValid {
+		data.BoolVals["logged_in"] = true
+		data.StringVals["nav_bar"] = LoadTemplateAsComponent(res.VIEWS+"/nav_bar.html", &data)
+
 		t, err := template.ParseFiles(res.VIEWS + "/snippet_home.gohtml")
-
 		res.CheckErr(err)
 
-		data.BoolVals["logged_in"] = false
-
-		if tokenValid, user := session.ValidateToken(r); tokenValid {
-
+		if r.Method == "GET" {
 			session.IssueValidationToken(w, r, user)
 			data.BoolVals["logged_in"] = true
 			data.StringVals["logged_in_name"] = "Logged in as " + user
-			data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
 
 			data.StringVals["table"] = loadTableFromDB(user)
 
 			t.Execute(w, data)
-
-		} else {
-
-			data.StringVals["error_msg"] = res.LOGIN_ALERT
-			errorPage.Execute(w, data)
-
-		}
-	} else if r.Method == "DELETE" {
-		//fmt.Println("HIT DELETE END POINT")
-		id := mux.Vars(r)["id"]
-
-		if tokenValid, _ := session.ValidateToken(r); tokenValid {
-			//userid := _data.GetUserId(user)
+		} else if r.Method == "DELETE" {
+			id := mux.Vars(r)["id"]
 			stmt, _ := _data.DB.Prepare("delete from snippet where id=?")
 			stmt.Exec(id)
-		} else {
-			data.StringVals["error_msg"] = res.LOGIN_ALERT
-			errorPage.Execute(w, data)
-
 		}
-
+	} else {
+		//TODO: add navbar and erorr message to error page
+		errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
+		res.CheckErr(err)
+		data.StringVals["error_msg"] = res.LOGIN_ALERT
+		errorPage.Execute(w, data)
 	}
 }
 
@@ -131,86 +113,58 @@ func loadTableFromDB(username string) string {
 	return buffer.String()
 }
 
+//SnippetCreate handles requests for the snippet create page
 func SnippetCreate(w http.ResponseWriter, r *http.Request) {
 	var data TemplateData
 	data.Init()
-	if r.Method == "GET" {
-		t, err := template.ParseFiles(res.VIEWS + "/snippet_create.gohtml")
 
-		res.CheckErr(err)
-		errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
+	data.BoolVals["logged_in"] = false
 
-		data.BoolVals["logged_in"] = false
+	if tokenValid, user := session.ValidateToken(r); tokenValid {
 
-		if tokenValid, user := session.ValidateToken(r); tokenValid {
+		session.IssueValidationToken(w, r, user)
 
-			session.IssueValidationToken(w, r, user)
-			data.BoolVals["logged_in"] = true
-			data.StringVals["logged_in_name"] = "Logged in as " + user
-			data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+		if r.Method == "GET" {
+			//t, err := template.ParseFiles(res.VIEWS + "/snippet_create.gohtml")
+			var t *template.Template
+			t, data := LoadStdPage(r, "/snippet_create.gohtml", user)
 
 			data.StringVals["table"] = loadTableFromDB(user)
 
 			t.Execute(w, data)
+		} else if r.Method == "POST" {
 
-		} else {
-			data.StringVals["error_msg"] = res.LOGIN_ALERT
-			errorPage.Execute(w, data)
-
-		}
-	} else if r.Method == "POST" {
-		//t, err := template.ParseFiles(res.VIEWS + "/snippet_create.gohtml")
-
-		//res.CheckErr(err)
-		errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
-		res.CheckErr(err)
-
-		data.BoolVals["logged_in"] = false
-
-		if tokenValid, user := session.ValidateToken(r); tokenValid {
 			r.ParseForm()
 			session.IssueValidationToken(w, r, user)
+
 			data.BoolVals["logged_in"] = true
 			data.StringVals["logged_in_name"] = "Logged in as " + user
-			data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+			data.StringVals["nav_bar"] = LoadTemplateAsComponent(res.VIEWS+"/nav_bar.html", &data)
 
 			data.StringVals["table"] = loadTableFromDB(user)
-
-			//fmt.Println(r.Form["snippet_data"])
-			//checkForSnippet, _ := _data.DB.Query("select * from snippet where name=?", r.Form["snippet_name"])
-			//fmt.Println("db: ")
-			//fmt.Println(_data.DB)
-			//fmt.Println(user)
 			userid := _data.GetUserId(user)
-			//fmt.Println(userid)
 			stmt, _ := _data.DB.Prepare("insert into snippet (userid, snippet_name) values (?, ?)")
 			stmt.Exec(userid, r.Form.Get("snippet_name"))
+
 			http.Redirect(w, r, "../snippet/home", 302)
-
-			//t.Execute(w, data)
-		} else {
-			data.StringVals["error_msg"] = res.LOGIN_ALERT
-			errorPage.Execute(w, data)
-
 		}
+	} else {
+		errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
+		data.StringVals["error_msg"] = res.LOGIN_ALERT
+		res.CheckErr(err)
+		errorPage.Execute(w, data)
 	}
 }
 
+
+//SnippetEdit handles editing of snippets
 func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 	var data TemplateData
 	data.Init()
-	if r.Method == "GET" {
-		if tokenValid, user := session.ValidateToken(r); tokenValid {
 
-			t, err := template.ParseFiles(res.VIEWS + "/snippet_edit.gohtml")
-			res.CheckErr(err)
-
-			fmt.Println("edit func")
-			data.BoolVals["logged_in"] = true
-			data.StringVals["logged_in_name"] = "Logged in as " + user
-			data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
-
-			data.StringVals["table"] = loadTableFromDB(user)
+	if tokenValid, user := session.ValidateToken(r); tokenValid {
+		if r.Method == "GET" {
+			t, data := LoadStdPage(r, "/snippet_edit.gohtml", user)
 
 			nameQuery, _ := _data.DB.Query("select snippet_name, data from snippet where id=?", id)
 			nameQuery.Next()
@@ -221,32 +175,37 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 
 			data.StringVals["snippet_name"] = snippetName
 			data.StringVals["snippet_data"] = snippetData
-			//fmt.Println("snippet name: " + data.StringVals["snippet_name"])
-			//data.StringVals["iframe_contents"] = "$(document).ready(function(){$('#preview_frame').contents().find('body').html('<div> blah </div>');});"
 
-			t.Execute(w, data)
-		}
-	} else if r.Method == "POST" {
-		vars := mux.Vars(r)
-		r.ParseForm()
-		if tokenValid, user := session.ValidateToken(r); tokenValid {
-			t, data := LoadStdPage(r, "/snippet_edit.gohtml", user)
-			data.StringVals["snippet_name"] = r.Form.Get("snippet_name")
-			data.StringVals["snippet_data"] = r.Form.Get("snippet_data")
-			//regexp.MustCompile(`\n*`).ReplaceAllString(r.Form.Get("snippet_data"), "")
-			//fmt.Println("b" + b)
 			stmt, _ := _data.DB.Prepare("update snippet set snippet_name=?, data=? where id=?")
-			stmt.Exec(data.StringVals["snippet_name"], data.StringVals["snippet_data"], vars["id"])
+
+			stmt.Exec(data.StringVals["snippet_name"], data.StringVals["snippet_data"], id)
 
 			re := regexp.MustCompile(`\r?\n`)
 
+			snippetPreview := LoadTemplateAsComponent(res.VIEWS+"/preview.html", data)
 
-			//data.StringVals["snippet_data"] = re.ReplaceAllString(r.Form.Get("snippet_data"), "")
-
-			snippetPreview := LoadTemplateAsComponenet(res.VIEWS+"/preview.html", data)
-			fmt.Println(snippetPreview)
 			data.StringVals["snippet_preview"] = re.ReplaceAllString(snippetPreview, "")
-			previewScript := LoadTemplateAsComponenet(res.VIEWS + "/preview_script.html", data)
+
+			previewScript := LoadTemplateAsComponent(res.VIEWS + "/preview_script.html", data)
+			data.StringVals["preview_script"] = re.ReplaceAllString(previewScript, "")
+
+			t.Execute(w, data)
+		} else if r.Method == "POST" {
+			r.ParseForm()
+			t, data := LoadStdPage(r, "/snippet_edit.gohtml", user)
+			data.StringVals["snippet_name"] = r.Form.Get("snippet_name")
+			data.StringVals["snippet_data"] = r.Form.Get("snippet_data")
+
+			stmt, _ := _data.DB.Prepare("update snippet set snippet_name=?, data=? where id=?")
+			stmt.Exec(data.StringVals["snippet_name"], data.StringVals["snippet_data"], id)
+
+			re := regexp.MustCompile(`\r?\n`)
+
+			snippetPreview := LoadTemplateAsComponent(res.VIEWS+"/preview.html", data)
+
+			data.StringVals["snippet_preview"] = re.ReplaceAllString(snippetPreview, "")
+
+			previewScript := LoadTemplateAsComponent(res.VIEWS + "/preview_script.html", data)
 			data.StringVals["preview_script"] = re.ReplaceAllString(previewScript, "")
 
 
@@ -255,6 +214,8 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 	}
 }
 
+
+//LoadStdPage loads a page with navbar
 func LoadStdPage(r *http.Request, templatePath string, user string) (*template.Template, *TemplateData) {
 	var data TemplateData
 	data.Init()
@@ -264,7 +225,7 @@ func LoadStdPage(r *http.Request, templatePath string, user string) (*template.T
 	fmt.Println("edit func")
 	data.BoolVals["logged_in"] = true
 	data.StringVals["logged_in_name"] = "Logged in as " + user
-	data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+	data.StringVals["nav_bar"] = LoadTemplateAsComponent(res.VIEWS+"/nav_bar.html", &data)
 
 	return t, &data
 }

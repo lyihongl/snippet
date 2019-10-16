@@ -17,6 +17,8 @@ type GeneralData struct {
 	NavBar   string
 }
 
+
+//TemplateData is a struct of bool, float, string, and int maps allowing for easy templating
 type TemplateData struct{
 	BoolVals map[string]bool
 	FloatVals map[string]float64
@@ -24,6 +26,8 @@ type TemplateData struct{
 	IntVals map[string]int
 }
 
+
+//Init initializes all maps used in template data
 func (t *TemplateData) Init() {
 	t.BoolVals = make(map[string]bool)
 	t.FloatVals = make(map[string]float64)
@@ -33,9 +37,6 @@ func (t *TemplateData) Init() {
 
 //Index is the main landing page of the webside, and only handles GET requests
 func Index(w http.ResponseWriter, r *http.Request) {
-	//fmt.Println(r.Method)
-	//var generalData GeneralData
-	//generalData.LoggedIn = false
 	var data TemplateData
 	data.Init()
 	data.BoolVals["logged_in"] = false
@@ -47,12 +48,14 @@ func Index(w http.ResponseWriter, r *http.Request) {
 			data.BoolVals["logged_in"] = true
 			data.StringVals["logged_in_name"] = "Logged in as "+user
 		}
-		data.StringVals["nav_bar"] = LoadTemplateAsComponenet(res.VIEWS+"/nav_bar.html", &data)
+		data.StringVals["nav_bar"] = LoadTemplateAsComponent(res.VIEWS+"/nav_bar.html", &data)
 		t.Execute(w, data)
 	}
 }
 
-func LoadTemplateAsComponenet(path string, data *TemplateData) string{
+
+//LoadTemplateAsComponent loads templates, filling in data, and returns the template as a string
+func LoadTemplateAsComponent(path string, data *TemplateData) string{
 	t, err := template.ParseFiles(path)
 	res.CheckErr(err)
 	var tpl bytes.Buffer
@@ -60,6 +63,8 @@ func LoadTemplateAsComponenet(path string, data *TemplateData) string{
 	return tpl.String()
 }
 
+
+//ComingSoon handles GET requests to the coming soon pages
 func ComingSoon(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		t, err := template.ParseFiles(res.VIEWS + "/coming_soon.gohtml")

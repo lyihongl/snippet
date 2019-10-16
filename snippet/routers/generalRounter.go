@@ -8,7 +8,7 @@ import (
 	"github.com/lyihongl/main/snippet/app"
 )
 
-//route is the general router for all services
+//ServiceRouter is the general router for all services
 func ServiceRouter(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println(vars)

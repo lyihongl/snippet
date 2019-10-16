@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -18,11 +18,13 @@ import (
 
 func main() {
 	prod := os.Args
-	fmt.Println(prod[1])
-	fmt.Println(prod[1] == "prod")
-	certmagic.Default.Agreed = true
+	//fmt.Println(prod[1])
+	//fmt.Println(prod[1] == "prod")
 
+	certmagic.Default.Agreed = true
 	certmagic.Default.Email = "yihongliu00@gmail.com"
+
+	//init database
 	data.Init()
 
 	r := mux.NewRouter()

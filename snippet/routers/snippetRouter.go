@@ -9,6 +9,8 @@ import (
 	//"github.com/lyihongl/main/snippet/res"
 )
 
+
+//SnippetRouter routes specific actions related to snippet
 func SnippetRouter(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Println("vars", vars)

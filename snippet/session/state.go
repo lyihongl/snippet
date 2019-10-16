@@ -10,11 +10,13 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+//Credentials stores a json username and password
 type Credentials struct {
 	Password string `json:"password"`
 	Username string `json:"username"`
 }
 
+//Claims jwt claims
 type Claims struct {
 	Username string `json:"username"`
 	jwt.StandardClaims
@@ -31,6 +33,7 @@ func ConfirmUsername(w http.ResponseWriter, r *http.Request) bool {
 	return true
 }
 
+//JwtKey secret key used for jwt
 var JwtKey = []byte("secret_key")
 
 //ValidateToken returns true if a valid login token is stored in cookies, false otherwise
@@ -62,6 +65,7 @@ func ValidateToken(r *http.Request) (bool, string) {
 	return true, claims.Username
 }
 
+//IssueValidationToken issues a jwt used for authentication
 func IssueValidationToken(w http.ResponseWriter, r *http.Request, username string) {
 	expirationTime := time.Now().Add(7 * 24 * time.Hour)
 	fmt.Println("form username", r.Form.Get("username"))
@@ -91,17 +95,4 @@ func IssueValidationToken(w http.ResponseWriter, r *http.Request, username strin
 		Path:    "/",
 		Expires: expirationTime,
 	})
-	//user, _ := bcrypt.GenerateFromPassword([]byte(username), bcrypt.DefaultCost)
-
-	//setting a cookie with hashed username, as well as regular username. To ensure the user is valid
-	//use bcrypt to compare the 2
-
-	//if _, err := r.Cookie("username"); err != nil {
-	//http.SetCookie(w, &http.Cookie{
-	//Name:    "username_hash",
-	//Value:   string(user),
-	//Path:    "/",
-	//Expires: expirationTime,
-	//})
-	//}
 }
