@@ -32,10 +32,16 @@ func (b *BreadCrumbList) DefineLevels(levels map[string]int) {
 }
 
 func (b *BreadCrumbList) Update(action string) {
+	listContainsRoot := false
 	for i, e := range b.Crumbs{
 		if(e.Level <= b.Levels[action]) {
 			b.Crumbs[len(b.Crumbs) - 1], b.Crumbs[i] = b.Crumbs[i], b.Crumbs[len(b.Crumbs)-1]
 			b.Crumbs = b.Crumbs[:len(b.Crumbs) - 1]
 		}
+		if(e.Level < b.Levels[action]) {
+			listContainsRoot = true
+		}
+	}
+	if(!listContainsRoot) {
 	}
 }

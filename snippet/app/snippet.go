@@ -86,8 +86,8 @@ func loadTableFromDB(username string) string {
 
 	var buffer bytes.Buffer
 
-	var t_data TemplateData
-	t_data.Init()
+	var tData TemplateData
+	tData.Init()
 	index := 0
 
 	for snippet.Next() {
@@ -98,16 +98,16 @@ func loadTableFromDB(username string) string {
 		//var data string
 
 		snippet.Scan(&uid, &name)
-		t_data.IntVals["snippet_id"] = uid
-		t_data.IntVals["snippet_num"] = index
-		t_data.StringVals["snippet_name"] = name
+		tData.IntVals["snippet_id"] = uid
+		tData.IntVals["snippet_num"] = index
+		tData.StringVals["snippet_name"] = name
 
 		//fmt.Println(name)
 
 		t, err := template.ParseFiles(res.VIEWS + "/table.html")
 		res.CheckErr(err)
 
-		t.Execute(&buffer, t_data)
+		t.Execute(&buffer, tData)
 	}
 
 	return buffer.String()
@@ -211,6 +211,15 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 
 			t.Execute(w, data)
 		}
+	}
+}
+
+func SnippetExport(w http.ResponseWriter, r *http.Request) {
+	if tokenValid, user := session.ValidateToken(r); tokenValid {
+		t, data:= LoadStdPage(r, "/snippet_export.gohtml", user)	
+		t.Execute(w, data)
+	} else {
+
 	}
 }
 

@@ -22,5 +22,7 @@ func SnippetRouter(w http.ResponseWriter, r *http.Request) {
 		app.SnippetCreate(w, r)
 	} else if vars["action"] == "edit" {
 		app.SnippetEdit(w, r, vars["id"])
+	} else if vars["action"] == "export" {
+		app.SnippetExport(w, r)
 	}
 }
