@@ -21,6 +21,11 @@ body{
     margin-right:auto;
 }
 
+.blue-border{
+    border: 1px solid blue;
+    padding: 10px;
+}
+
 .justify-text{
     text-align: justify;
 }
@@ -110,4 +115,8 @@ body{
 
 textarea {
     resize: none !important;
+}
+
+.no-right-padding{
+    padding-right: 0px;
 }
