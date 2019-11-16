@@ -113,6 +113,42 @@ func loadTableFromDB(username string) string {
 	return buffer.String()
 }
 
+func loadExportList(username string) string {
+	userid, err := _data.DB.Query("select id from users where username=?", username)
+	userid.Next()
+	var uid int
+	userid.Scan(&uid)
+	res.CheckErr(err)
+	snippet, err := _data.DB.Query("SELECT id, snippet_name FROM snippet where userid=?", uid)
+	res.CheckErr(err)
+
+	var buffer bytes.Buffer
+
+	var tData TemplateData
+	tData.Init()
+	index := 0
+	for snippet.Next() {
+		index++
+		var uid int
+		//var snippet_id int
+		var name string
+		//var data string
+
+		snippet.Scan(&uid, &name)
+		tData.IntVals["snippet_id"] = uid
+		tData.IntVals["snippet_num"] = index
+		tData.StringVals["snippet_name"] = name
+
+		//fmt.Println(name)
+
+		t, err := template.ParseFiles(res.VIEWS + "/export_table.html")
+		res.CheckErr(err)
+
+		t.Execute(&buffer, tData)
+	}
+	return buffer.String()
+}
+
 //SnippetCreate handles requests for the snippet create page
 func SnippetCreate(w http.ResponseWriter, r *http.Request) {
 	var data TemplateData
@@ -208,15 +244,16 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 			previewScript := LoadTemplateAsComponent(res.VIEWS + "/preview_script.html", data)
 			data.StringVals["preview_script"] = re.ReplaceAllString(previewScript, "")
 
-
 			t.Execute(w, data)
 		}
 	}
 }
 
+//SnippetExport is the controller for the export page
 func SnippetExport(w http.ResponseWriter, r *http.Request) {
 	if tokenValid, user := session.ValidateToken(r); tokenValid {
 		t, data:= LoadStdPage(r, "/snippet_export.gohtml", user)	
+		fmt.Println(loadExportList(user))
 		t.Execute(w, data)
 	} else {
 
