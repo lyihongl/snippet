@@ -141,7 +141,7 @@ func loadExportList(username string) string {
 
 		//fmt.Println(name)
 
-		t, err := template.ParseFiles(res.VIEWS + "/export_table.html")
+		t, err := template.ParseFiles(res.VIEWS + "/export_table.gohtml")
 		res.CheckErr(err)
 
 		t.Execute(&buffer, tData)
@@ -254,6 +254,7 @@ func SnippetExport(w http.ResponseWriter, r *http.Request) {
 	if tokenValid, user := session.ValidateToken(r); tokenValid {
 		t, data:= LoadStdPage(r, "/snippet_export.gohtml", user)	
 		fmt.Println(loadExportList(user))
+		data.StringVals["export_table"] = loadExportList(user)
 		t.Execute(w, data)
 	} else {
 

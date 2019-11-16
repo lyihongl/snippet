@@ -10,6 +10,11 @@ body{
     padding-top: 60px;
 }
 
+.no-row-margin-lr{
+    margin-left:0px!important;
+    margin-right:0px!important;
+}
+
 .static{
     position: fixed;
 }
@@ -119,4 +124,12 @@ textarea {
 
 .no-right-padding{
     padding-right: 0px;
+}
+
+.center-vert{
+    align-items: center;
+}
+
+.checkbox{
+    margin-right:0.1vw;
 }
