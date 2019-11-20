@@ -11,7 +11,7 @@ import (
 	app "github.com/lyihongl/main/snippet/app"
 	//"github.com/lyihongl/main/snippet/data"
 
-	data "github.com/lyihongl/main/snippet/data"
+	//data "github.com/lyihongl/main/snippet/data"
 	"github.com/mholt/certmagic"
 	//test "github.com/lyihongl/main/test"
 )
@@ -25,9 +25,10 @@ func main() {
 	certmagic.Default.Email = "yihongliu00@gmail.com"
 
 	//init database
-	data.Init()
+	//data.Init()
 
 	r := mux.NewRouter()
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("frontend/app/build"))))
 	r.HandleFunc("/", app.Index)
 
 	//General routes
