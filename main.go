@@ -5,16 +5,28 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"encoding/json"
 
 	"github.com/gorilla/mux"
-	routers "github.com/lyihongl/main/snippet/routers"
-	app "github.com/lyihongl/main/snippet/app"
+	//routers "github.com/lyihongl/main/snippet/routers"
+	//app "github.com/lyihongl/main/snippet/app"
 	//"github.com/lyihongl/main/snippet/data"
 
-	//data "github.com/lyihongl/main/snippet/data"
+	data "github.com/lyihongl/main/snippet/data"
 	"github.com/mholt/certmagic"
 	//test "github.com/lyihongl/main/test"
 )
+
+type Profile struct{
+	Name string
+	Hobbies []string
+}
+
+func test(w http.ResponseWriter, r* http.Request){
+	//fmt.Println("test")
+	profile := Profile{"Alex", []string{"Dance, Music"}}
+	json.NewEncoder(w).Encode(profile)
+}
 
 func main() {
 	prod := os.Args
@@ -25,26 +37,28 @@ func main() {
 	certmagic.Default.Email = "yihongliu00@gmail.com"
 
 	//init database
-	//data.Init()
+	data.Init()
 
 	r := mux.NewRouter()
+	r.HandleFunc("/test", test).Methods("GET")
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("frontend/app/build"))))
-	r.HandleFunc("/", app.Index)
+	//r.HandleFunc("/", app.Index)
+	
 
 	//General routes
-	r.HandleFunc("/coming_soon", app.ComingSoon)
-	r.HandleFunc("/login", app.GeneralLogin)
-	r.HandleFunc("/create_acc", app.CreateAcc)
+	//r.HandleFunc("/coming_soon", app.ComingSoon)
+	//r.HandleFunc("/login", app.GeneralLogin)
+	//r.HandleFunc("/create_acc", app.CreateAcc)
 
 	//service routes
-	r.HandleFunc("/services", routers.ServiceRouter)
-	r.HandleFunc("/services/{service}", routers.ServiceRouter)
-	r.HandleFunc("/services/{service}/{action}", routers.ServiceRouter)
-	r.HandleFunc("/services/{service}/{action}/{id}", routers.ServiceRouter)
+	//r.HandleFunc("/services", routers.ServiceRouter)
+	//r.HandleFunc("/services/{service}", routers.ServiceRouter)
+	//r.HandleFunc("/services/{service}/{action}", routers.ServiceRouter)
+	//r.HandleFunc("/services/{service}/{action}/{id}", routers.ServiceRouter)
 
 
-	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/static"))))
-	r.PathPrefix("/dynamic").Handler(http.StripPrefix("/dynamic/", http.FileServer(http.Dir("snippet/javascript"))))
+	//r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/static"))))
+	//r.PathPrefix("/dynamic").Handler(http.StripPrefix("/dynamic/", http.FileServer(http.Dir("snippet/javascript"))))
 
 	if prod[1] == "prod" {
 		certmagic.HTTPS([]string{"yihong.ca"}, r)

@@ -253,7 +253,7 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 func SnippetExport(w http.ResponseWriter, r *http.Request) {
 	if tokenValid, user := session.ValidateToken(r); tokenValid {
 		t, data:= LoadStdPage(r, "/snippet_export.gohtml", user)	
-		fmt.Println(loadExportList(user))
+		//fmt.Println(loadExportList(user))
 		data.StringVals["export_table"] = loadExportList(user)
 		t.Execute(w, data)
 	} else {
