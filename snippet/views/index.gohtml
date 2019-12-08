@@ -2,81 +2,23 @@
     <!--
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     -->
+    <link rel="stylesheet" type="text/css" href="/static/navbar.css">
+    <link rel="stylesheet" type="text/css" href="/static/fadein.css">
     <head>
     </head>
-    <link rel="stylesheet" type="text/css" href="/static/new_style.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <body>
-        {{index .StringVals "nav_bar"}}
-        <div>
-                <div class="text-center">
-                    <img src="/static/LinkedInDPSmall.png" class="rounded-circle">
+    <body class="">
+        <div class="">
+            <nav class="container main-nav ">
+                <div class="nav-item nav-1 ">
+                    <a href="/projects" class="navLinks ">Projects</a>
                 </div>
-            <h1 class="text-center">
-                Yihong Liu
-            </h1>
-
-            <div class="container">
-                <div class="row">
-                    <div class="constrain-width custom-box-0">
-                        1B (going into 2a) Waterloo computer engineering, and talented front end designer (/s).
-                        This website is my portal for side project development. It is entirely written in Golang, and (mostly) vanilla
-                        HTML, CSS and Javascript.
-                    </div>
+                <div class="nav-item nav-2">
+                    <a href="/services" class="navLinks">Yihong Liu</a>
                 </div>
-                <div class="row margin-top">
-                    <div class="constrain-width custom-box-0">
-                        Be sure to check out the services link to see some of my work in progress web applications
-                    </div>
+                <div class="nav-item nav-3">
+                    <a href="/about" class="navLinks">About Me</a>
                 </div>
-            </div>
-            <div class="container">
-                <div class="row margin-top">
-                    <h3 class="auto-margin">
-                        Cool things I've done that might not necessary make it on my resume:
-                    </h3>
-                </div>
-                <div class="margin-top">
-                    <h5>
-                        PCB Schematic and Layout:
-                    </h5>
-                </div>
-                <div class="row margin-top blue-border">
-                    <div class="col text-left">
-                            <img src="/static/pduSmall.png" id="pdu-img" class="pull-right">
-                    </div>
-                    <div class="col justify-text">
-                        <p class="constrain-width justify-text">
-                            I recently joined University of Waterloo's formula motorsports team.
-                            Since I was little, I've always had an interest in cars.
-                            More recently, I've become more interested in motorsports,
-                            so naturally, when I had the time, I joined the motorsports racing team.
-                            Being in ECE, it also made sense to join the electrical sub team.
-                        </p>
-                        <p class="constrain-width justify-text">
-                            The first task I took on was an update of the PDU, or power distribution unit.
-                            Me and another friend from ECE worked over 4 months to update the 2019 PDU design,
-                            fixing previous design flaws, and designing the new board layout.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            </nav>
         </div>
-        <div class="container">
-            <div class="row margin-top text-center">
-                <h5>Soldering the PCB I designed:</h5>
-            </div>
-            <div class="row margin-top blue-border">
-                <div class = "col auto-margin text-center">
-                    <img src="/static/pdu_top (2) - edited.jpg" class="auto-margin">
-                </div>
-                <div class="col auto-margin text-center">
-                    <img src="/static/pdu_bot (2) - edited.jpg" class="auto-margin">
-                </div>
-            </div>
-        </div>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>
 </html>

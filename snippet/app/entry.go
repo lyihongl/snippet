@@ -64,7 +64,7 @@ func GeneralLogin(w http.ResponseWriter, r *http.Request) {
 			t.Execute(w, loginErrors)
 		} else {
 			session.IssueValidationToken(w, r, r.Form.Get("username"))
-			http.Redirect(w, r, "/", 302)
+			http.Redirect(w, r, "/services", 302)
 		}
 	}
 }
