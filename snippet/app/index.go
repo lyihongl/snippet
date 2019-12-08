@@ -72,3 +72,11 @@ func ComingSoon(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, nil)
 	}
 }
+
+func Projects(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		t, err := template.ParseFiles(res.VIEWS+ "/projects.html")
+		res.CheckErr(err)
+		t.Execute(w, nil)
+	}
+}

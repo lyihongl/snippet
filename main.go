@@ -34,6 +34,7 @@ func main() {
 	r.HandleFunc("/coming_soon", app.ComingSoon)
 	r.HandleFunc("/login", app.GeneralLogin)
 	r.HandleFunc("/create_acc", app.CreateAcc)
+	r.HandleFunc("/projects", app.Projects)
 
 	//service routes
 	r.HandleFunc("/services", routers.ServiceRouter)
