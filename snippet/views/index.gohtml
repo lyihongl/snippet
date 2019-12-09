@@ -4,14 +4,17 @@
     -->
     <link rel="stylesheet" type="text/css" href="/static/navbar.css">
     <link rel="stylesheet" type="text/css" href="/static/fadein.css">
-    <link rel="stylesheet" type="text/css" href="/static/new_style.css"
+    <link rel="stylesheet" type="text/css" href="/static/new_style.css">
+    <link rel="stylesheet" type="text/css" href="/static/slideshow.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
     <head>
     </head>
     <body class="ubuntu-font center">
         <div class="title-card">
             <nav class="container main-nav ">
                 <div class="nav-item nav-1 ">
-                    <a href="#projects" class="navLinks ">Projects</a>
+                    <a href="#page-1" class="navLinks ">Projects</a>
                 </div>
                 <div class="nav-item nav-2">
                     <a href="/services" class="navLinks">Yihong Liu</a>
@@ -21,9 +24,23 @@
                 </div>
             </nav>
         </div>
-        <div class="page center container">
-            <a id="projects"></a>
-            <h2 class="center">Projects</h2>
+        <div class="page center container grid-row" id="page-1">
+            <div class="subheader row-1">
+                UWFM
+            </div>
+            <div class="row-2">
+                <div class="text-left col-1">
+                    <img class="slide-show" src="static/pduSmall.png">
+                    <img class="slide-show" src="static/pdu_top (2) - edited.jpg">
+                    <button class="slide-show-btn" onclick="plusDivs(-1)">&#10094;</button>
+                    <button class="slide-show-btn" onclick="plusDivs(1)" style="float: right;">&#10095;</button>
+                </div>
+                <script src="dynamic/slideshow.js">
+                </script>
+            </div>
+            <div class="text-left col-2">
+                Hello
+            </div>
         </div>
     </body>
 </html>

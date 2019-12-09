@@ -1,0 +1,18 @@
+.slide-show{
+    height: 400px;
+    width: 400px;
+}
+
+.slide-show-btn{
+    background-color: rgba(0, 0, 0, 0);
+    border: 0px;
+    color: white;
+    position: relative;
+    top:-400px;
+    height: 400px;
+    outline: none;
+}
+.slide-show-btn:hover{
+    background-color: rgba(167, 165, 165, 0.4);
+    cursor: pointer;
+}

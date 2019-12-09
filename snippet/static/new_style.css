@@ -22,19 +22,37 @@ body{
 }
 
 .grid-row{
-    grid-template-rows: repeat(4, 80%);
+    grid-template-rows: 20vh 60vh 20vh;
+    grid-template-columns: 50% 50%;
+    grid-template-areas: 
+    "subheader subheader"
+    "content1 content2";
 }
 
-.item{
-    display: grid;
-    grid-row: 2/4;
-    grid-template-columns: subgrid;
+.row-1{
+    grid-row: 1;
+    grid-area: subheader;
+}
+.row-2{
+    grid-row: 2;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 20px;
+}
+
+.col-1{
+    grid-column: 1;
+    grid-area: content1;
+}
+
+.col-2{
+    grid-column: 2;
+    grid-area: content2;
 }
 
 .ubuntu-font{
   font-family: 'Ubuntu', sans-serif;
   font-size: 1.2em;
-  text-transform: uppercase;
   text-decoration: none;
   color: black;
 }
@@ -175,4 +193,14 @@ textarea {
 
 .page{
     margin-top: 5vh;
+    height: 100vh;
+}
+
+.subheader{
+    font-size: 30px;
+    margin-top: 4vh;
+}
+
+#page-1{
+    background-image: linear-gradient(to bottom right, rgb(245, 99, 157) , rgb(153, 228, 151));
 }
