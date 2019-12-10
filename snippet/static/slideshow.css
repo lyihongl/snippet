@@ -4,7 +4,7 @@
 }
 
 .slide-show-btn{
-    background-color: rgba(0, 0, 0, 0);
+    background-color: rgba(146, 146, 146, 0.25);
     border: 0px;
     color: white;
     position: relative;
@@ -15,4 +15,11 @@
 .slide-show-btn:hover{
     background-color: rgba(167, 165, 165, 0.4);
     cursor: pointer;
+}
+
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
 }
