@@ -4,6 +4,16 @@ html{
     scroll-behavior: smooth;
 }
 
+.background-image{
+    background-image: url("/static/pdu.PNG");
+
+  /* Full height */
+  height: 100%;
+}
+
+.background-image-child{
+}
+
 a{
     text-decoration: none;
 }
@@ -257,17 +267,33 @@ textarea {
 }
 
 #page-1{
-    background-image: linear-gradient(to bottom right, rgb(245, 99, 157) , rgb(153, 228, 151));
+    /*background-color: rgba(182, 74, 117, 0.4);*/
 }
 #page-2{
-    background-image: linear-gradient(to bottom right, rgb(93, 196, 236) , rgb(216, 137, 216));
+    /*background-color: rgba(245, 99, 157, 0.2);*/
 }
 
 .text-box-1{
-    max-width: 70%;
+    padding-top: 5%;
+    max-width: 80%;
+    margin-left: 10%;
+    padding-bottom: 5%;
 }
 
 .text-box-2{
-    margin-top: 5vh;
-    max-width: 70%;
+    margin-top: 3vh;
+    max-width: 80%;
+    margin-left: 10%;
+    padding-bottom: 5%;
+}
+
+.slide-label{
+    background-color: rgb(233, 146, 181);
+}
+
+.text-box-parent{
+    background-color: rgb(233, 146, 181);
+    max-width: 90%;
+    border-top: 5vw;
+    border-top-color: rgb(233, 146, 181);
 }

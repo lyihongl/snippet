@@ -6,10 +6,13 @@
     <link rel="stylesheet" type="text/css" href="/static/fadein.css">
     <link rel="stylesheet" type="text/css" href="/static/new_style.css">
     <link rel="stylesheet" type="text/css" href="/static/slideshow.css">
+    <link rel="stylesheet" type="text/css" href="/static/scroll.css">
 
     <head>
     </head>
     <body class="ubuntu-font center" id="page-0">
+        <div class="background-image">
+        <script src="/dynamic/scroll.js"></script>
         <div class="title-card">
             <nav class="container main-nav ">
                 <div class="nav-item nav-1 ">
@@ -53,18 +56,20 @@
                 </script>
             </div>
             <div class="text-left col-2">
-                <div class="text-box-1">
-                    I am a member of the University of Waterloo Formula Motorsports team. I work with the
-                    electronics sub-team to design and manufacture components for the electronics system
-                    on the car.
-                </div>
-                <div class="text-box-2">
-                    In the summer of 2019, I worked with another member of the team to design the Power Distribution Unit for the 2020
-                    season. The 2019 season revealed many faults in the PDU design that we worked to correct.
-                </div>
-                <div class="text-box-2">
-                    I was also responsible for creating 3D models for our pnuematic shift system, allowing me to gain practice with
-                    SolidWorks.
+                <div class="text-box-parent">
+                    <div class="text-box-1">
+                        I am a member of the University of Waterloo Formula Motorsports team. I work with the
+                        electronics sub-team to design and manufacture components for the electronics system
+                        on the car.
+                    </div>
+                    <div class="text-box-2">
+                        In the summer of 2019, I worked with another member of the team to design the Power Distribution Unit for the 2020
+                        season. The 2019 season revealed many faults in the PDU design that we worked to correct.
+                    </div>
+                    <div class="text-box-2">
+                        I was also responsible for creating 3D models for our pnuematic shift system, allowing me to gain practice with
+                        SolidWorks.
+                    </div>
                 </div>
             </div>
             <div class="next2">
@@ -93,6 +98,7 @@
                     <button class="next-btn" onclick="window.location.href = '#page-2';">+</button>
                 </div>
             </div>
+        </div>
         </div>
     </body>
 </html>

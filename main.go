@@ -11,7 +11,7 @@ import (
 	app "github.com/lyihongl/main/snippet/app"
 	//"github.com/lyihongl/main/snippet/data"
 
-	data "github.com/lyihongl/main/snippet/data"
+	//data "github.com/lyihongl/main/snippet/data"
 	"github.com/mholt/certmagic"
 	//test "github.com/lyihongl/main/test"
 )
