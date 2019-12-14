@@ -1,20 +1,22 @@
 <html>
-    <!--
+<!--
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     -->
-    <link rel="stylesheet" type="text/css" href="/static/navbar.css">
-    <link rel="stylesheet" type="text/css" href="/static/fadein.css">
-    <link rel="stylesheet" type="text/css" href="/static/new_style.css">
-    <link rel="stylesheet" type="text/css" href="/static/slideshow.css">
-    <link rel="stylesheet" type="text/css" href="/static/scroll.css">
+<link rel="stylesheet" type="text/css" href="/static/navbar.css">
+<link rel="stylesheet" type="text/css" href="/static/fadein.css">
+<link rel="stylesheet" type="text/css" href="/static/new_style.css">
+<link rel="stylesheet" type="text/css" href="/static/slideshow.css">
+<link rel="stylesheet" type="text/css" href="/static/scroll.css">
 
-    <head>
-    </head>
-    <body class="ubuntu-font center" id="page-0">
-        <div class="background-image">
+<head>
+</head>
+
+<body class="ubuntu-font center" id="page-0">
+    <div class="background-image" style="background-image: url('/static/subaru - Copy.jpg');"></div>
+    <div class="page-top">
         <script src="/dynamic/scroll.js"></script>
         <div class="title-card">
-            <nav class="container main-nav ">
+            <nav class="main-nav container">
                 <div class="nav-item nav-1 ">
                     <a href="#page-1" class="navLinks ">Projects</a>
                 </div>
@@ -40,7 +42,7 @@
                     <div class="slide-show">
                         <img class="slide-show-img" src="static/pdu.PNG">
                         <div class="center slide-label">
-                            PCB Layout 
+                            PCB Layout
                         </div>
                     </div>
                     <div class="slide-show">
@@ -56,18 +58,20 @@
                 </script>
             </div>
             <div class="text-left col-2">
-                <div class="text-box-parent">
+                <div class="text-box-parent" id="uwfm-box">
                     <div class="text-box-1">
                         I am a member of the University of Waterloo Formula Motorsports team. I work with the
                         electronics sub-team to design and manufacture components for the electronics system
                         on the car.
                     </div>
                     <div class="text-box-2">
-                        In the summer of 2019, I worked with another member of the team to design the Power Distribution Unit for the 2020
+                        In the summer of 2019, I worked with another member of the team to design the Power Distribution
+                        Unit for the 2020
                         season. The 2019 season revealed many faults in the PDU design that we worked to correct.
                     </div>
                     <div class="text-box-2">
-                        I was also responsible for creating 3D models for our pnuematic shift system, allowing me to gain practice with
+                        I was also responsible for creating 3D models for our pnuematic shift system, allowing me to
+                        gain practice with
                         SolidWorks.
                     </div>
                 </div>
@@ -80,17 +84,35 @@
         </div>
         <div class="page center container grid-row" id="page-2">
             <div class="subheader row-1">
+
                 Golang Web App
+            </div>
+            <div class="row-2">
+                <div class="col-1">
+
+                    <img class="show-img" src="static/home-gopher.png">
+                </div>
             </div>
             <div class="prev">
                 <div class="prev-sub">
                     <button class="prev-btn" onclick="window.location.href = '#page-1';">-</button>
                 </div>
+                <div class="row-2" class="page-top">
+                </div>
             </div>
-            <div class="row-2">
-            </div>
-            <div class="text-left col-2">
-                <div class="text-box-1">
+            <div class="texleft col-2">
+                <div class="text-box-parent text-left" id="go-box">
+                    <div class="text-box-1">
+                        The website you are currently viewing is actually served on a Go web server.
+                        In August, I wanted to learn about full stack programming. I wasn't sure which
+                        tech stack to use, however, I had a friend that was very passionate about Go.
+                    </div>
+                    <div class="text-box-2">
+                        The frontend was made entirely from scratch (which is why it's somewhat trash).
+                        There are some projects that I work on occasionally
+                        in the backend.
+                        <a href="/services">Check them out here</a>
+                    </div>
                 </div>
             </div>
             <div class="next2">
@@ -98,7 +120,6 @@
                     <button class="next-btn" onclick="window.location.href = '#page-2';">+</button>
                 </div>
             </div>
-        </div>
-        </div>
-    </body>
+</body>
+
 </html>

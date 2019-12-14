@@ -4,14 +4,23 @@ html{
     scroll-behavior: smooth;
 }
 
-.background-image{
-    background-image: url("/static/pdu.PNG");
-
-  /* Full height */
-  height: 100%;
+.page-top{
 }
 
-.background-image-child{
+.background-image{
+    background-size: 210vh;
+
+  /* Full height */
+  position: absolute;
+  top: 0px;
+  height: 100vh;
+  width: 100%;
+  z-index: -10;
+   filter: blur(2px);
+  -webkit-filter: blur(2px);
+}
+
+.background-image-2{
 }
 
 a{
@@ -259,6 +268,7 @@ textarea {
 
 .page{
     height: 100vh;
+    position: relative;
 }
 
 .subheader{
@@ -292,8 +302,22 @@ textarea {
 }
 
 .text-box-parent{
-    background-color: rgb(233, 146, 181);
     max-width: 90%;
     border-top: 5vw;
+}
+
+#uwfm-box{
+
+    background-color: rgb(233, 146, 181);
     border-top-color: rgb(233, 146, 181);
+}
+
+.show-img{
+    height:100%;
+    width: auto;
+}
+
+#go-box{
+    background-color: #7fd5ea;
+    border-top-color: #7fd5ea;
 }
