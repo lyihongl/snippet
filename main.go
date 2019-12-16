@@ -7,25 +7,26 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	routers "github.com/lyihongl/main/snippet/routers"
-	app "github.com/lyihongl/main/snippet/app"
+	"github.com/lyihongl/main/snippet/routers"
+	"github.com/lyihongl/main/snippet/app"
 	//"github.com/lyihongl/main/snippet/data"
 
-	data "github.com/lyihongl/main/snippet/data"
+	"github.com/lyihongl/main/snippet/data"
 	"github.com/mholt/certmagic"
 	//test "github.com/lyihongl/main/test"
 )
+
 
 func main() {
 	prod := os.Args
 	//fmt.Println(prod[1])
 	//fmt.Println(prod[1] == "prod")
-
+	
 	certmagic.Default.Agreed = true
 	certmagic.Default.Email = "yihongliu00@gmail.com"
 
 	//init database
-	data.Init()
+	//app.DBManager.Init()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", app.Index)
@@ -37,10 +38,12 @@ func main() {
 	r.HandleFunc("/projects", app.Projects)
 
 	//service routes
+	r.PathPrefix("/services/snippet/export").Handler(http.StripPrefix("/", http.FileServer(http.Dir("frontend/app/build"))))
 	r.HandleFunc("/services", routers.ServiceRouter)
 	r.HandleFunc("/services/{service}", routers.ServiceRouter)
 	r.HandleFunc("/services/{service}/{action}", routers.ServiceRouter)
 	r.HandleFunc("/services/{service}/{action}/{id}", routers.ServiceRouter)
+
 
 
 	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/static"))))

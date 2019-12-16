@@ -26,6 +26,10 @@ const (
 
 //CreateErrors defines a structure to hold error states and messages during
 //the creation of a user
+
+//DBManager holds reference to the current database instance
+var DBManager data.MySQL
+
 type CreateErrors struct {
 	UsernameError bool
 	EmailError    bool
@@ -81,11 +85,14 @@ func CreateAcc(w http.ResponseWriter, r *http.Request) {
 		if createErrors.UsernameError || createErrors.EmailError || createErrors.PasswordError {
 			t.Execute(w, createErrors)
 		} else {
-			stmt, err := data.DB.Prepare("INSERT INTO users (username,email,password) VALUES (?,?,?)")
 			res.CheckErr(err)
 			hash, err := bcrypt.GenerateFromPassword([]byte(r.Form.Get("password")), bcrypt.DefaultCost)
-			res.CheckErr(err)
-			stmt.Exec(r.Form.Get("username"), r.Form.Get("email"), hash)
+			var userData data.User
+			userData.Username = r.Form.Get("username")
+			userData.Email = r.Form.Get("email")
+			userData.Password = string(hash)
+
+			data.InsertUser(&DBManager, &userData)	
 			http.Redirect(w, r, "..", http.StatusFound)
 		}
 	}
@@ -107,14 +114,26 @@ func checkCreateError(r *http.Request) CreateErrors {
 
 	createErrors.Persist["username"] = r.Form["username"][0]
 	createErrors.Persist["email"] = r.Form["email"][0]
-	userCheck, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
+	//userCheck, err := data.DB.Query("SELECT * FROM users WHERE username=?", r.Form.Get("username"))
+
+	column := []string{"*"}
+	table := "users"
+	where := make(map[string]string)
+	where["username"] = r.Form.Get("username")
+
+	userCheck, err := DBManager.Select(column, table, where)
 	res.CheckErr(err)
 	if userCheck.Next() {
 		createErrors.UsernameError = true
 		createErrors.UsernameMessage = append(createErrors.UsernameMessage, userAlreadyExists)
 	}
 
-	emailCheck, err := data.DB.Query("select * from users where email=?", r.Form.Get("email"))
+	//emailCheck, err := data.DB.Query("select * from users where email=?", r.Form.Get("email"))
+
+	delete(where, "username")
+	where["email"] = r.Form.Get("email")
+	emailCheck, err := DBManager.Select(column, table, where)
+
 	res.CheckErr(err)
 
 	if emailCheck.Next() {
@@ -158,7 +177,13 @@ func checkLoginError(r *http.Request) LoginErrors {
 		re.UsernameMessage = append(re.UsernameMessage, userNameEmpty)
 	}
 
-	userCheck, err := data.DB.Query("SELECT password FROM users WHERE username=?", r.Form.Get("username"))
+	column := []string{"*"}
+	table := "users"
+	where := make(map[string]string)
+	where["username"] = r.Form.Get("username")
+
+	userCheck, err := DBManager.Select(column, table, where)
+
 	res.CheckErr(err)
 
 	if !userCheck.Next() {
