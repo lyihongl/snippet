@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"strconv"
 	"text/template"
 
 	//"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"github.com/gorilla/mux"
+	"github.com/lyihongl/main/snippet/data"
 	_data "github.com/lyihongl/main/snippet/data"
 	"github.com/lyihongl/main/snippet/res"
 	"github.com/lyihongl/main/snippet/session"
@@ -259,9 +261,32 @@ func SnippetExport(w http.ResponseWriter, r *http.Request) {
 		} else if r.Method == "POST" {
 			r.ParseForm()
 			//fmt.Println(r.Form)
-			for k := range r.Form {
-				fmt.Println(k)
+			//ids := ""
+			//index := 0
+			ids := make([]string, len(r.Form))
+			for k, v := range r.Form {
+				i, err := strconv.Atoi(v[0])
+				//fmt.Println(i)
+				if err == nil {
+					ids[i-1] += k
+				}
 			}
+			//fmt.Println(ids)
+			exportSnippets := make([]string, len(r.Form))
+			index := 0
+			//test := ""
+			for i := range ids {
+				//fmt.Println(i)
+				querySnippet, _ := data.DB.Query("SELECT data FROM snippet where id=?", ids[i])
+				fmt.Println(querySnippet)
+				if querySnippet.Next() {
+					fmt.Println("here")
+					querySnippet.Scan(&exportSnippets[index])
+					//exportSnippets[index] += test
+				}
+				index++
+			}
+			fmt.Println(exportSnippets)
 		}
 	} else {
 
