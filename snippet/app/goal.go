@@ -77,6 +77,7 @@ func DayPPCreate(w http.ResponseWriter, r *http.Request) {
 
 func DayPPView(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
+		t, _ := template.ParseFiles(res.VIEWS + "/daypp_view.html")
 		id := r.URL.Query().Get("id")
 		//fmt.Println(id)
 		var data TemplateData
@@ -86,9 +87,28 @@ func DayPPView(w http.ResponseWriter, r *http.Request) {
 		if title.Next() {
 			title.Scan(&_title)
 		}
-		fmt.Println(_title)
+
+		comments, _ := _data.DB.Query("select comment from initiativeComments where initiative_id=? order by id desc", id)
+		fmt.Println("initiative id: " + id)
+
+		//var buffer bytes.Buffer
+		var tData TemplateData
+
+		tData.Init()
+
+		for comments.Next() {
+			var comment string
+			comments.Scan(&comment)
+			tData.StringVals["comment"] = comment
+			fmt.Println("comment " + tData.StringVals["comment"])
+			//fmt.Println("comment" + comment)
+			data.StringVals["comments"] += LoadTemplateAsComponent(res.VIEWS+"/daypp_comment.html", &tData)
+		}
+		fmt.Println(tData.StringVals["comments"])
+		//data.StringVals["comments"] = tData
 
 		data.StringVals["title"] = _title
+		t.Execute(w, data)
 	} else if r.Method == "POST" {
 
 	}
