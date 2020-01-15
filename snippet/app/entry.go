@@ -14,14 +14,14 @@ import (
 
 //Error messages
 const (
-	userNameTooLong   	= "Username cannot be over 16 characters"
-	userNameEmpty     	= "Username field empty"
-	userAlreadyExists 	= "Username already exists"
-	invalidEmail      	= "Invalid email address"
-	emailAlreadyExists 	= "Account with this email already exists"
-	passwordEmpty     	= "Password field empty"
-	invalidLogin      	= "Login credentials invalid"
-	passwordMissmatch 	= "Passwords do not match"
+	userNameTooLong    = "Username cannot be over 16 characters"
+	userNameEmpty      = "Username field empty"
+	userAlreadyExists  = "Username already exists"
+	invalidEmail       = "Invalid email address"
+	emailAlreadyExists = "Account with this email already exists"
+	passwordEmpty      = "Password field empty"
+	invalidLogin       = "Login credentials invalid"
+	passwordMissmatch  = "Passwords do not match"
 )
 
 //CreateErrors defines a structure to hold error states and messages during
@@ -69,7 +69,6 @@ func GeneralLogin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 //CreateAcc serves the create account page and handles GET and POST requests
 func CreateAcc(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(res.VIEWS + "/create_acc.gohtml")
@@ -91,10 +90,10 @@ func CreateAcc(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type userInterface struct{
-	uid int
+type userInterface struct {
+	uid      int
 	username string
-	email string
+	email    string
 	password string
 }
 
@@ -180,4 +179,18 @@ func checkLoginError(r *http.Request) LoginErrors {
 		re.UsernameMessage = append(re.UsernameMessage, invalidLogin)
 	}
 	return re
+}
+
+func ErrorPage(w http.ResponseWriter, r *http.Request) {
+
+	var data TemplateData
+	data.Init()
+
+	data.BoolVals["logged_in"] = false
+
+	//TODO: add navbar and erorr message to error page
+	errorPage, err := template.ParseFiles(res.VIEWS + "/error.gohtml")
+	res.CheckErr(err)
+	data.StringVals["error_msg"] = res.LOGIN_ALERT
+	errorPage.Execute(w, data)
 }

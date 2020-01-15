@@ -11,5 +11,9 @@ func DayPPRouter(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	if vars["action"] == "" {
 		app.DayPP(w, r)
+	} else if vars["action"] == "create" {
+		app.DayPPCreate(w, r)
+	} else if vars["action"] == "view" {
+		app.DayPPView(w, r)
 	}
 }

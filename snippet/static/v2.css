@@ -1,0 +1,7 @@
+.v2-a-button:hover {
+    cursor: none;
+}
+
+.v2-visited-link:visited{
+    color: blue;
+}

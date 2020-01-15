@@ -3,8 +3,8 @@ package app
 import (
 	"bytes"
 	"fmt"
-	"regexp"
 	"net/http"
+	"regexp"
 	"text/template"
 
 	//"github.com/SebastiaanKlippert/go-wkhtmltopdf"
@@ -192,7 +192,6 @@ func SnippetCreate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 //SnippetEdit handles editing of snippets
 func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 	var data TemplateData
@@ -222,7 +221,7 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 
 			data.StringVals["snippet_preview"] = re.ReplaceAllString(snippetPreview, "")
 
-			previewScript := LoadTemplateAsComponent(res.VIEWS + "/preview_script.html", data)
+			previewScript := LoadTemplateAsComponent(res.VIEWS+"/preview_script.html", data)
 			data.StringVals["preview_script"] = re.ReplaceAllString(previewScript, "")
 
 			t.Execute(w, data)
@@ -241,7 +240,7 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 
 			data.StringVals["snippet_preview"] = re.ReplaceAllString(snippetPreview, "")
 
-			previewScript := LoadTemplateAsComponent(res.VIEWS + "/preview_script.html", data)
+			previewScript := LoadTemplateAsComponent(res.VIEWS+"/preview_script.html", data)
 			data.StringVals["preview_script"] = re.ReplaceAllString(previewScript, "")
 
 			t.Execute(w, data)
@@ -252,7 +251,7 @@ func SnippetEdit(w http.ResponseWriter, r *http.Request, id string) {
 //SnippetExport is the controller for the export page
 func SnippetExport(w http.ResponseWriter, r *http.Request) {
 	if tokenValid, user := session.ValidateToken(r); tokenValid {
-		t, data:= LoadStdPage(r, "/snippet_export.gohtml", user)	
+		t, data := LoadStdPage(r, "/snippet_export.gohtml", user)
 		fmt.Println(loadExportList(user))
 		data.StringVals["export_table"] = loadExportList(user)
 		t.Execute(w, data)
@@ -260,7 +259,6 @@ func SnippetExport(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
-
 
 //LoadStdPage loads a page with navbar
 func LoadStdPage(r *http.Request, templatePath string, user string) (*template.Template, *TemplateData) {

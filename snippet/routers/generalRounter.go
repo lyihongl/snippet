@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/lyihongl/main/snippet/app"
+	"github.com/lyihongl/main/snippet/session"
 )
 
 //ServiceRouter is the general router for all services
@@ -37,7 +38,13 @@ func ServiceRouter(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(snippetCrumbs.Crumbs)
 	if vars["service"] == "" {
 		app.ServicePage(w, r)
-	} else if vars["service"] == "snippet" {
-		SnippetRouter(w, r)
+	} else if tokenValid, _ := session.ValidateToken(r); tokenValid {
+		if vars["service"] == "snippet" {
+			SnippetRouter(w, r)
+		} else if vars["service"] == "DayPP" {
+			DayPPRouter(w, r)
+		}
+	} else {
+		app.ErrorPage(w, r)
 	}
 }

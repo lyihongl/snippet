@@ -7,11 +7,12 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	routers "github.com/lyihongl/main/snippet/routers"
 	app "github.com/lyihongl/main/snippet/app"
+	"github.com/lyihongl/main/snippet/data"
+	routers "github.com/lyihongl/main/snippet/routers"
+
 	//"github.com/lyihongl/main/snippet/data"
 
-	data "github.com/lyihongl/main/snippet/data"
 	"github.com/mholt/certmagic"
 	//test "github.com/lyihongl/main/test"
 )
@@ -41,7 +42,6 @@ func main() {
 	r.HandleFunc("/services/{service}", routers.ServiceRouter)
 	r.HandleFunc("/services/{service}/{action}", routers.ServiceRouter)
 	r.HandleFunc("/services/{service}/{action}/{id}", routers.ServiceRouter)
-
 
 	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("snippet/static"))))
 	r.PathPrefix("/dynamic").Handler(http.StripPrefix("/dynamic/", http.FileServer(http.Dir("snippet/javascript"))))
